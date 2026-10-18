@@ -14,7 +14,7 @@ Set `NEXT_PUBLIC_SITE_URL` to the full public deployment root at build time. It 
 
 Set the base path at build time. Internal links, provider logos, report requests and worker URLs use the same prefix. Normal custom-domain hosting uses an empty base path.
 
-The CI workflow validates and exports the site. The separate Pages workflow is manually dispatched after GitHub Pages is configured to use GitHub Actions; it does not publish automatically merely because source code is pushed.
+The manual Pages workflow obtains the real public URL and base path from `configure-pages`, including custom-domain configuration. The CI workflow validates and exports the site. The separate Pages workflow is manually dispatched after GitHub Pages is configured to use GitHub Actions; it does not publish automatically merely because source code is pushed.
 
 ## Hosting behavior
 
@@ -27,3 +27,5 @@ The CI workflow validates and exports the site. The separate Pages workflow is m
 COOP/COEP headers must be configured by the host if a future runtime requires cross-origin isolation. The current WebGPU worker does not require enabling them. Adding isolation requires checking upstream model/WASM response compatibility first. GitHub Pages does not provide arbitrary per-response header configuration; the capability card should honestly show unavailable isolation there.
 
 Fonts and provider logos are served locally. Built-in AI availability checks do not download or instantiate a model.
+
+Search metadata, social images, crawlable static content and `llms.txt` are documented in [seo.md](seo.md). The export audit writes `artifacts/validation/seo-audit.json`.

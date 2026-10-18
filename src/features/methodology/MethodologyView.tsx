@@ -1,6 +1,15 @@
 "use client";
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Methodology } from "./Methodology";
-export function MethodologyView() {
+function QueryMethodology() {
   return <Methodology section={useSearchParams().get("section")} />;
+}
+
+export function MethodologyView() {
+  return (
+    <Suspense fallback={<Methodology section={null} />}>
+      <QueryMethodology />
+    </Suspense>
+  );
 }

@@ -1,13 +1,19 @@
 "use client";
+import type { ReactNode } from "react";
 import { useSearchParams } from "next/navigation";
 import { useReports } from "../../components/layout/AppProvider";
 import { reportRow } from "../leaderboard/data";
 import ModelReport from "./ModelReport";
-export function ModelReportView({ slug }: { slug: string }) {
+export function ModelReportView({
+  slug,
+  loading,
+}: {
+  slug: string;
+  loading: ReactNode;
+}) {
   const params = useSearchParams();
   const { published, publishedReady, inspect } = useReports();
-  if (!publishedReady)
-    return <p role="status">Loading published measurements…</p>;
+  if (!publishedReady || !published.length) return loading;
   return (
     <ModelReport
       slug={slug}

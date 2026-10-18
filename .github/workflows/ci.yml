@@ -31,9 +31,11 @@ jobs:
       - run: npm run build
         env:
           NEXT_PUBLIC_BASE_PATH: /browser-llm-bench
+          NEXT_PUBLIC_SITE_URL: https://benchmark.example/browser-llm-bench
       - run: npm run verify:export
         env:
           NEXT_PUBLIC_BASE_PATH: /browser-llm-bench
+          NEXT_PUBLIC_SITE_URL: https://benchmark.example/browser-llm-bench
   macos-collector:
     runs-on: macos-latest
     steps:

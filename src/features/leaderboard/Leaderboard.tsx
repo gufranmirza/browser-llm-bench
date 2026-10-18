@@ -25,7 +25,6 @@ import {
 } from "recharts";
 import type { ResourceSummary } from "../../benchmark/metrics/resources";
 import {
-  comparisonKey,
   protocolLabel,
   summarizeResources,
 } from "../../benchmark/metrics/resources";
@@ -63,6 +62,7 @@ import {
 
 import { downloadJson } from "../../lib/download";
 import "./leaderboard.css";
+import { comparisonGroups } from "./comparison";
 
 type Entry = { row: Row; resources: ResourceSummary };
 type Key =
@@ -167,11 +167,6 @@ const coverage = (e: Entry, k: Key) =>
       : k === "power"
         ? e.resources.powerCoverage
         : null;
-function stableId(s: string) {
-  let h = 2166136261;
-  for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
-  return (h >>> 0).toString(36);
-}
 const params = () =>
   new URLSearchParams(
     typeof window === "undefined" ? "" : window.location.search.slice(1),
@@ -278,24 +273,7 @@ export default function LeaderboardPage({ allRows }: { allRows: Row[] }) {
     () => allRows.filter((r) => r.source === "measured" && r.report),
     [allRows],
   );
-  const groups = useMemo(() => {
-    const map = new Map<string, Row[]>();
-    for (const r of source) {
-      const k = comparisonKey(r);
-      map.set(k, [...(map.get(k) ?? []), r]);
-    }
-    return [...map]
-      .map(([key, rs]) => ({
-        id: stableId(key),
-        rows: rs,
-      }))
-      .sort(
-        (a, b) =>
-          Number(!!b.rows[0].report?.profile?.plan.countSchedule) -
-            Number(!!a.rows[0].report?.profile?.plan.countSchedule) ||
-          b.rows.length - a.rows.length,
-      );
-  }, [source]);
+  const groups = useMemo(() => comparisonGroups(source), [source]);
   const selected = groups[0];
   const entries = useMemo(
     () =>

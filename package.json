@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "node scripts/build-worker.mjs && next dev --hostname 127.0.0.1 --port 3000",
-    "build": "npm run validate:reports && node scripts/build-worker.mjs && next build",
+    "dev": "node scripts/build-worker.mjs && npm run build:seo -- --development && next dev --hostname 127.0.0.1 --port 3000",
+    "build": "npm run validate:reports && node scripts/build-worker.mjs && npm run build:seo && next build",
     "preview": "tsx harness/controller/server.ts --site-only",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/unit/*.test.ts",
@@ -21,7 +21,8 @@
     "verify:export": "tsx scripts/verify-export.ts",
     "check:unused": "knip --include files,dependencies,unlisted,unresolved --no-progress",
     "check": "npm run typecheck && npm test && npm run test:harness && npm run test:integration && npm run check:unused && npm run format:check",
-    "build:brand": "node scripts/build-brand-assets.mjs"
+    "build:brand": "node scripts/build-brand-assets.mjs",
+    "build:seo": "tsx scripts/build-seo.ts"
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "5.3.0",
@@ -43,6 +44,7 @@
     "zod": "^4.1.0"
   },
   "devDependencies": {
+    "@next/env": "16.4.2",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

@@ -4,11 +4,15 @@ import type { Report } from "../../benchmark/schemas/report";
 import { Button } from "../../components/ui/button";
 
 import { Status } from "../../components/Status";
+export type CompatibilityEvidence = Pick<
+  Report,
+  "model" | "runtime" | "status"
+> & { environment: Pick<Report["environment"], "deviceLabel"> };
 export function Compatibility({
   reports,
   onRun,
 }: {
-  reports: Report[];
+  reports: CompatibilityEvidence[];
   onRun: () => void;
 }) {
   const local = reports[0];
@@ -45,7 +49,7 @@ export function Compatibility({
           <tbody>
             <tr>
               <td>
-                <strong>WebLLM 0.2.82</strong>
+                <strong>{local?.runtime ?? "WebLLM / WebGPU"}</strong>
                 <small>{local?.model ?? "Pinned WebGPU artifacts"}</small>
               </td>
               <td>

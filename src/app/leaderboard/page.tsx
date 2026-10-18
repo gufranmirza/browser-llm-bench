@@ -1,3 +1,4 @@
+import { PublishedLeaderboard } from "../../features/leaderboard/PublishedLeaderboard";
 import { pageMetadata } from "../../lib/metadata";
 import { LeaderboardView } from "../../features/leaderboard/LeaderboardView";
 export const metadata = pageMetadata({
@@ -8,5 +9,5 @@ export const metadata = pageMetadata({
   index: true,
 });
 export default function Page() {
-  return <LeaderboardView />;
+  return <LeaderboardView loading={<PublishedLeaderboard />} />;
 }

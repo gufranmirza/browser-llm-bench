@@ -1,10 +1,10 @@
 "use client";
+import type { ReactNode } from "react";
 import { useReports } from "../../components/layout/AppProvider";
 import { reportRow } from "./data";
 import Leaderboard from "./Leaderboard";
-export function LeaderboardView() {
+export function LeaderboardView({ loading }: { loading: ReactNode }) {
   const { published, publishedReady } = useReports();
-  if (!publishedReady)
-    return <p role="status">Loading published measurements…</p>;
+  if (!publishedReady || !published.length) return loading;
   return <Leaderboard allRows={published.map(reportRow)} />;
 }

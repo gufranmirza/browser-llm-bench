@@ -38,6 +38,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="describedby" href={assetUrl("llms.txt")} type="text/plain" />
+      </head>
       <body>
         <div id="root">
           <AppProvider>

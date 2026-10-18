@@ -9,5 +9,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/compatibility/",
     "/run/",
     ...catalog.map((model) => `/models/${model.slug}/`),
-  ].map((path) => ({ url: publicUrl(path) }));
+  ].map((path) => ({
+    url: publicUrl(path),
+    images: [
+      publicUrl(
+        path === "/"
+          ? "brand/social-card.png"
+          : `seo${path.replace(/\/$/, "")}.png`,
+      ),
+    ],
+  }));
 }
