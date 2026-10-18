@@ -9,6 +9,7 @@ import { Suspense, type ReactNode } from "react";
 import { AppProvider } from "../components/layout/AppProvider";
 import { Footer } from "../components/layout/Footer";
 import { Header } from "../components/layout/Header";
+import { Analytics } from "../components/layout/Analytics";
 import "../styles/base.css";
 import "../styles/components.css";
 import "../styles/charts.css";
@@ -54,6 +55,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link rel="describedby" href={assetUrl("llms.txt")} type="text/plain" />
       </head>
       <body>
+        <Analytics />
         <div id="root">
           <AppProvider>
             <Header />

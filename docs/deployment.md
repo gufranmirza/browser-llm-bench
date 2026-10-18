@@ -26,6 +26,7 @@ Configure Workers Builds with:
 - Build command: `npm run build`
 - Deploy command: `npm run deploy:cloudflare`
 - Build variable: `NEXT_PUBLIC_SITE_URL=https://browserllm.dev`
+- Build variable: `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-9JKSZEHQ3L`
 - Leave `NEXT_PUBLIC_BASE_PATH` unset or empty.
 
 Wrangler is pinned in the lockfile. The explicit assets configuration prevents framework auto-configuration from adding OpenNext or changing the static build. For a local authenticated deployment, build first, then run `npm run deploy:cloudflare`. `npx wrangler deploy --dry-run` validates the package without publishing.
@@ -43,5 +44,11 @@ Wrangler is pinned in the lockfile. The explicit assets configuration prevents f
 COOP/COEP headers must be configured by the host if a future runtime requires cross-origin isolation. The current WebGPU worker does not require enabling them. Adding isolation requires checking upstream model/WASM response compatibility first. GitHub Pages does not provide arbitrary per-response header configuration; the capability card should honestly show unavailable isolation there.
 
 Fonts and provider logos are served locally. Built-in AI availability checks do not download or instantiate a model.
+
+## Page analytics
+
+The Browser LLM Bench GA4 property uses web stream `G-9JKSZEHQ3L`. Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` at build time to enable it; leave it empty to omit Analytics. The tag loads after hydration only on public pages at `https://browserllm.dev`. Localhost, preview domains, the runner, private results and local reports are excluded. No prompts, responses, device capability readings or benchmark samples are sent.
+
+Page views follow Next.js pathname navigation. URL queries and fragments are removed, referrers contain only their origin, and filter/section changes do not create extra page views. Google signals and ad personalization are disabled. Keep **Enhanced measurement off** in the GA4 web stream: automatic history, form and search events would bypass this intentionally limited collection. Analytics does not run in the local harness or on an initial runner-page load.
 
 Search metadata, social images, crawlable static content and `llms.txt` are documented in [seo.md](seo.md). The export audit writes `artifacts/validation/seo-audit.json`.
