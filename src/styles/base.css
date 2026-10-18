@@ -1,6 +1,6 @@
 :root {
   --site-header-offset: 79px;
-  --font-sans: "DM Sans Variable", Arial, sans-serif;
+  --font-sans: var(--font-brand-sans, Arial, sans-serif);
   --font-mono: "IBM Plex Mono", monospace;
   --control-height: 40px;
   --focus-ring: #527b68;

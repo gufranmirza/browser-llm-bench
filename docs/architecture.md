@@ -24,4 +24,6 @@ The local controller binds to 127.0.0.1. Host and mutation-origin checks restric
 
 ## UI and assets
 
-Shared shadcn/Radix components retain centralized styling. Global foundations and shared component styles live under `src/styles`; page-specific styles live beside their feature. Logos and fonts are local static assets. Brand attribution and third-party licenses are retained.
+Shared shadcn/Radix components retain centralized styling. Global foundations and shared component styles live under `src/styles`; page-specific styles live beside their feature. The root layout imports all shared and feature styles so Next emits blocking CSS in the initial document head, including on client navigation. The local DM Sans font is preloaded through `next/font/local`; its source lives under `src/assets/fonts`. Brand attribution and third-party licenses are retained.
+
+Published pages show a non-animated loading layout while report JSON is fetched. Their static measurement summaries remain in `noscript` for visitors without JavaScript; they are not briefly displayed and then replaced with a different layout. Initial report-section scrolling and sticky-header measurement run before paint.

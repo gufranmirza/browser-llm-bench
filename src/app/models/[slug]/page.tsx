@@ -1,3 +1,4 @@
+import { PublishedContentLoading } from "../../../components/layout/PublishedContentLoading";
 import { Suspense } from "react";
 import { PublishedModelSummary } from "../../../features/model-report/PublishedModelSummary";
 import { pageMetadata } from "../../../lib/metadata";
@@ -76,7 +77,9 @@ export default async function Page({
   return (
     <>
       <JsonLd data={{ ...data, "@graph": [...data["@graph"], ...datasets] }} />
-      <Suspense fallback={loading}>
+      <Suspense
+        fallback={<PublishedContentLoading>{loading}</PublishedContentLoading>}
+      >
         <ModelReportView slug={slug} loading={loading} />
       </Suspense>
     </>

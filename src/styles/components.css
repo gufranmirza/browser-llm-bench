@@ -1620,3 +1620,44 @@ main [id] {
   backdrop-filter: blur(3px);
   z-index: 100;
 }
+
+/* Keep one loading layout while static report data is fetched. No flashing animation. */
+.published-loading {
+  padding: 12px 0 56px;
+}
+.published-loading-heading {
+  width: min(360px, 75%);
+  height: 42px;
+  border-radius: 7px;
+  background: var(--soft);
+}
+.published-loading-description {
+  width: min(540px, 90%);
+  height: 18px;
+  margin-top: 22px;
+  border-radius: 5px;
+  background: var(--soft);
+}
+.published-loading-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 48px 0 30px;
+}
+.published-loading-cards > div {
+  height: 130px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: white;
+}
+.published-loading-content {
+  height: 420px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: white;
+}
+@media (max-width: 760px) {
+  .published-loading-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

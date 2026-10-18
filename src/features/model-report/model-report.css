@@ -242,33 +242,6 @@
   font-size: 12px;
   margin: 13px 0 26px;
 }
-.v2-section-nav {
-  display: flex;
-  gap: 27px;
-  position: sticky;
-  top: 0;
-  z-index: 15;
-  background: #fffffff5;
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid #dfe1e2;
-  padding: 0;
-  margin: 0 0 38px;
-  overflow-x: auto;
-}
-.v2-section-nav button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 17px 1px;
-  font-size: 12px;
-  white-space: nowrap;
-  border-bottom: 2px solid transparent;
-  color: #72757a;
-}
-.v2-section-nav button[aria-current] {
-  color: #262a30;
-  border-color: #262a30;
-}
 .model-v2 > section {
   scroll-margin-top: 80px;
   margin: 0 0 58px;
@@ -812,9 +785,6 @@
   .v2-startup .v2-facts > div:last-child {
     grid-column: 1/-1;
   }
-  .v2-section-nav {
-    gap: 20px;
-  }
 }
 @media (max-width: 480px) {
   .model-v2 [data-slot="card-header"],
@@ -845,12 +815,6 @@
   }
   .v2-topline {
     margin-bottom: 25px;
-  }
-  .v2-section-nav {
-    gap: 18px;
-  }
-  .v2-section-nav button {
-    font-size: 11px;
   }
 }
 
@@ -967,6 +931,8 @@
   align-items: start;
 }
 .model-v2 .v2-section-nav {
+  position: sticky;
+  z-index: 15;
   display: flex;
   width: 100%;
   max-width: 100%;
@@ -984,6 +950,9 @@
   overflow: visible;
 }
 .model-v2 .v2-section-nav button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 12px;
   border: 0;
   border-radius: 7px;
@@ -991,7 +960,7 @@
   white-space: normal;
   font-size: 12px;
 }
-.model-v2 .v2-section-nav button[aria-current] {
+.model-v2 .v2-section-nav button[data-state="active"] {
   box-shadow: none;
   background: #edf0f2;
   color: #252c35;
@@ -1123,25 +1092,36 @@
     display: block;
   }
   .model-v2 .v2-section-nav {
-    position: sticky;
-    top: var(--site-header-offset);
+    top: calc(var(--site-header-offset) + 8px);
     flex-direction: row;
-    gap: 3px;
-    background: white;
-    flex-wrap: nowrap;
+    gap: 2px;
+    background: #f1f2f2;
     overflow-x: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #c6d0ca transparent;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--v2-border);
+    scrollbar-width: none;
+    padding: 4px;
+    border-radius: 8px;
     margin-bottom: 24px;
+    box-shadow: 0 -8px 0 8px white;
+  }
+  .model-v2 .v2-section-nav::-webkit-scrollbar {
+    display: none;
   }
   .model-v2 .v2-section-nav button {
-    flex: 0 0 auto;
-    min-height: 40px;
-    padding: 10px;
+    flex: 1 0 auto;
+    justify-content: center;
+    min-height: 36px;
+    padding: 8px 5px;
+    border-radius: 5px;
     font-size: 12px;
     white-space: nowrap;
+  }
+  .model-v2 .v2-section-nav button svg {
+    display: none;
+  }
+  .model-v2 .v2-section-nav button[data-state="active"] {
+    background: white;
+    color: var(--v2-ink);
+    box-shadow: 0 1px 3px #00000012;
   }
   .v2-section-content {
     max-height: none;

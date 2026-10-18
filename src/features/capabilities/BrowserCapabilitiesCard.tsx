@@ -41,7 +41,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "../../components/ui/dialog";
-import "./capabilities.css";
 const gib = (n: number | null) =>
   n === null
     ? "Not exposed"

@@ -2,14 +2,14 @@
 import { BrandMark } from "../BrandMark";
 import { brand } from "../../lib/brand";
 import { ArrowUpRight } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { SiteLink } from "../SiteLink";
 import { Button } from "../ui/button";
 export function Header() {
   const path = usePathname();
   const header = useRef<HTMLElement>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = header.current;
     if (!element) return;
     const measure = () =>

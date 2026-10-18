@@ -10,7 +10,6 @@ import {
   precision,
 } from "../leaderboard/data";
 import { assetUrl } from "../../lib/urls";
-import "./model-report.css";
 
 export async function PublishedModelSummary({ slug }: { slug: string }) {
   const model = catalog.find((m) => m.slug === slug)!;

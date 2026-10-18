@@ -1,4 +1,4 @@
-import "@fontsource-variable/dm-sans/wght.css";
+import localFont from "next/font/local";
 import "@fontsource/ibm-plex-mono/latin-400.css";
 import "@fontsource/ibm-plex-mono/latin-500.css";
 import type { Metadata } from "next";
@@ -12,6 +12,18 @@ import { Header } from "../components/layout/Header";
 import "../styles/base.css";
 import "../styles/components.css";
 import "../styles/charts.css";
+import "../features/leaderboard/leaderboard.css";
+import "../features/model-report/model-report.css";
+import "../features/runner/runner.css";
+import "../features/capabilities/capabilities.css";
+const sans = localFont({
+  src: "../assets/fonts/dm-sans-latin-variable.woff2",
+  variable: "--font-brand-sans",
+  display: "swap",
+  preload: true,
+  fallback: ["Arial"],
+  adjustFontFallback: "Arial",
+});
 export const metadata: Metadata = {
   ...pageMetadata(),
   // Route-level canonicals belong to pages, never inherited from the layout.
@@ -37,7 +49,7 @@ export const metadata: Metadata = {
 };
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={sans.variable}>
       <head>
         <link rel="describedby" href={assetUrl("llms.txt")} type="text/plain" />
       </head>

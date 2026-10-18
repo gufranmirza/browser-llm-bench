@@ -39,7 +39,6 @@ import {
 } from "../capabilities/BrowserCapabilitiesCard";
 import { bytesLabel, precision } from "../leaderboard/data";
 import { ProfileTimeline } from "./ProfileTimeline";
-import "./runner.css";
 import { useBenchmark } from "./useBenchmark";
 export default function Runner({
   onReport,

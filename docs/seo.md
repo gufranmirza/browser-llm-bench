@@ -4,7 +4,7 @@ The site uses Next.js `output: "export"`. Everything below is generated during t
 
 ## Public pages
 
-The homepage, methodology, compatibility, runner and 19 model-family pages have unique titles/descriptions, canonical URLs, Open Graph and Twitter cards, image descriptions, and content available before JavaScript executes. Published results use the same report selection and calculation helpers as the interactive views. Raw traces are fetched for interactive charts rather than serialized into initial HTML.
+The homepage, methodology, compatibility, runner and 19 model-family pages have unique titles/descriptions, canonical URLs, Open Graph and Twitter cards, image descriptions, and content available before JavaScript executes. Published results use the same report selection and calculation helpers as the interactive views. Raw traces are fetched for interactive charts rather than serialized into initial HTML. Published measurement summaries are retained in a `noscript` fallback; JavaScript-enabled visitors see a styled loading layout until the interactive report is ready. Structured data and Markdown guides remain available independently of that loading state.
 
 Model pages distinguish published measurements from configurations that have not been benchmarked. WebPage/breadcrumb JSON-LD describes public detail pages. Dataset entries link to actual published report JSON; no ratings, quality scores, invented organizations or fabricated measurement values are added.
 
@@ -25,6 +25,6 @@ npm run build
 npm run verify:export
 ```
 
-The export audit checks all 28 HTML pages and the 23 indexable canonical URLs, including pre-JavaScript headings, unique metadata, local image dimensions, JSON-LD, guide links, exact sitemap coverage, llms.txt links, icons, error responses and harness isolation. Its machine-readable output is saved to ignored `artifacts/validation/seo-audit.json`. CI repeats the audit under a repository subpath and a different public URL to catch hardcoded deployment links.
+The export audit checks all 28 HTML pages and the 23 indexable canonical URLs, including blocking stylesheets before scripts, static/no-JavaScript headings, unique metadata, local image dimensions, JSON-LD, guide links, exact sitemap coverage, llms.txt links, icons, error responses and harness isolation. Its machine-readable output is saved to ignored `artifacts/validation/seo-audit.json`. CI repeats the audit under a repository subpath and a different public URL to catch hardcoded deployment links.
 
 After deployment, verify the final property in Search Console, submit its `sitemap.xml`, and inspect representative live URLs. Local/static validation cannot prove that a search engine has crawled or indexed a site. A `robots.txt` only controls its origin root; on a GitHub Pages project subpath, the file in the project directory cannot replace the account origin's root policy. Page-level `noindex` and the separately submitted project sitemap still apply. A custom domain gives this site control of its own root robots file.

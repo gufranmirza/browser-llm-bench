@@ -14,7 +14,7 @@ import {
   Settings2,
   Timer,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import type { Report } from "../../benchmark/schemas/report";
 import { ProviderLogo } from "../../components/ProviderLogo";
 import { SiteLink } from "../../components/SiteLink";
@@ -57,7 +57,6 @@ import { leaderboardBack, modelSection } from "../../lib/model-route";
 import { PerformanceWorkspace } from "./PerformanceWorkspace";
 import { RequestExplorer } from "./RequestExplorer";
 import { ResourceWorkspace } from "./ResourceWorkspace";
-import "./model-report.css";
 
 function SectionTitle({
   number,
@@ -137,7 +136,7 @@ export default function ModelReport({
   const [activeSection, setActiveSection] = useState(
     modelSection(params.get("section")) ?? "v2-performance",
   );
-  useEffect(() => {
+  useLayoutEffect(() => {
     let frame = 0;
     const update = () => {
       frame = 0;
@@ -168,21 +167,18 @@ export default function ModelReport({
       if (!frame) frame = requestAnimationFrame(update);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
+    const initialSection = modelSection(params.get("section"));
+    if (initialSection)
+      document
+        .getElementById(initialSection)
+        ?.scrollIntoView({ behavior: "instant", block: "start" });
     update();
-    const initialFrame = requestAnimationFrame(() => {
-      const id = modelSection(params.get("section"));
-      if (id)
-        document
-          .getElementById(id)
-          ?.scrollIntoView({ behavior: "instant", block: "start" });
-    });
     return () => {
-      cancelAnimationFrame(initialFrame);
       window.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(frame);
     };
   }, []);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const nav = document.querySelector<HTMLElement>(".v2-section-nav");
     const current = nav?.querySelector<HTMLElement>("[aria-current]");
     if (!nav || !current || nav.scrollWidth <= nav.clientWidth) return;

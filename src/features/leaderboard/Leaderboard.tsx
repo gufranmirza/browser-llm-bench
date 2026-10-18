@@ -61,7 +61,6 @@ import {
 } from "./data";
 
 import { downloadJson } from "../../lib/download";
-import "./leaderboard.css";
 import { comparisonGroups } from "./comparison";
 
 type Entry = { row: Row; resources: ResourceSummary };

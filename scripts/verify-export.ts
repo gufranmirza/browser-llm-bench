@@ -76,6 +76,23 @@ async function verify(directory: string) {
       "",
     );
     const head = html.split("</head>")[0];
+    const stylesheets = [
+      ...head.matchAll(/<link\b[^>]*rel="stylesheet"[^>]*>/g),
+    ];
+    assert.ok(
+      stylesheets.length,
+      `Blocking styles must be in the document head: ${url}`,
+    );
+    for (const [tag] of stylesheets) {
+      assert.ok(
+        !/media="(?:print|not all)"|onload=/.test(tag),
+        `Styles must apply before first paint: ${url}`,
+      );
+      assert.ok(
+        head.indexOf(tag) < head.indexOf("<script"),
+        `Styles must precede scripts: ${url}`,
+      );
+    }
     assert.match(html, /<html lang="en"/);
     assert.match(head, /charset="utf-8"/i);
     assert.ok(meta(head, "viewport").includes("width=device-width"));

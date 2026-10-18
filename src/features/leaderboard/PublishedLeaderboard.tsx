@@ -7,7 +7,6 @@ import { ProviderLogo } from "../../components/ProviderLogo";
 import { readPublishedReports } from "../../lib/published-reports.server";
 import { comparisonGroups } from "./comparison";
 import { primaryMeasuredRows, reportRow } from "./data";
-import "./leaderboard.css";
 
 export async function PublishedLeaderboard() {
   const group = comparisonGroups(

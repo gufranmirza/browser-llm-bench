@@ -1,4 +1,5 @@
 "use client";
+import { PublishedContentLoading } from "../../components/layout/PublishedContentLoading";
 import type { ReactNode } from "react";
 import { useSearchParams } from "next/navigation";
 import { useReports } from "../../components/layout/AppProvider";
@@ -13,7 +14,9 @@ export function ModelReportView({
 }) {
   const params = useSearchParams();
   const { published, publishedReady, inspect } = useReports();
-  if (!publishedReady || !published.length) return loading;
+  if (!publishedReady)
+    return <PublishedContentLoading>{loading}</PublishedContentLoading>;
+  if (!published.length) return loading;
   return (
     <ModelReport
       slug={slug}
