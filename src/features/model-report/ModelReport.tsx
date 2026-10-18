@@ -32,6 +32,12 @@ import {
   CardHeader,
   CardTitle,
 } from "../../components/ui/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../components/ui/tabs";
 import { replaceUrl } from "../../lib/urls";
 import type { Row } from "../leaderboard/data";
 import {
@@ -176,6 +182,14 @@ export default function ModelReport({
       cancelAnimationFrame(frame);
     };
   }, []);
+  useEffect(() => {
+    const nav = document.querySelector<HTMLElement>(".v2-section-nav");
+    const current = nav?.querySelector<HTMLElement>("[aria-current]");
+    if (!nav || !current || nav.scrollWidth <= nav.clientWidth) return;
+    nav.scrollTo({
+      left: current.offsetLeft - (nav.clientWidth - current.offsetWidth) / 2,
+    });
+  }, [activeSection]);
   const model = catalog.find((m) => m.slug === slug);
   const artifact =
     artifacts.find(
@@ -445,463 +459,477 @@ export default function ModelReport({
             ? "Illustrative data only. These values demonstrate the interface, not measured model performance."
             : "This selection has no saved report. Missing measurements stay unavailable."}
       </p>
-      <div className="v2-section-layout">
-        <nav className="v2-section-nav" aria-label="Model sections">
+      <Tabs
+        className="v2-section-layout"
+        value={activeSection}
+        onValueChange={go}
+      >
+        <TabsList className="v2-section-nav" aria-label="Model sections">
           {sections.map(([id, label, Icon]) => (
-            <button
+            <TabsTrigger
               key={id}
+              value={id}
+              aria-controls={id}
               aria-current={activeSection === id ? "location" : undefined}
-              onClick={() => go(id)}
             >
               <Icon size={15} />
               {label}
-            </button>
+            </TabsTrigger>
           ))}
-        </nav>
+        </TabsList>
         <div className="v2-section-content">
-          <section id="v2-performance">
-            <SectionTitle
-              number="01"
-              title="Performance"
-              description="Startup, latency, generation speed and response time."
-            />
-            <PerformanceWorkspace
-              key={report?.id ?? row?.id}
-              samples={report?.samples ?? row?.samples ?? []}
-              recorded={!!report}
-            />
-            <Card className="v2-startup">
-              <CardHeader>
-                <CardTitle>
-                  <h3>Startup & cache</h3>
-                </CardTitle>
-                <CardDescription>
-                  Loading is measured separately from request performance.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Facts
-                  items={[
-                    ["Engine ready", secondsLabel(row?.loadMs ?? null)],
-                    [
-                      "First preparation",
-                      secondsLabel(report?.firstPreparationMs ?? null),
-                    ],
-                    ["Cache observation", report?.cache ?? "Not recorded"],
-                  ]}
-                />
+          <TabsContent value="v2-performance" forceMount asChild>
+            <section id="v2-performance">
+              <SectionTitle
+                number="01"
+                title="Performance"
+                description="Startup, latency, generation speed and response time."
+              />
+              <PerformanceWorkspace
+                key={report?.id ?? row?.id}
+                samples={report?.samples ?? row?.samples ?? []}
+                recorded={!!report}
+              />
+              <Card className="v2-startup">
+                <CardHeader>
+                  <CardTitle>
+                    <h3>Startup & cache</h3>
+                  </CardTitle>
+                  <CardDescription>
+                    Loading is measured separately from request performance.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Facts
+                    items={[
+                      ["Engine ready", secondsLabel(row?.loadMs ?? null)],
+                      [
+                        "First preparation",
+                        secondsLabel(report?.firstPreparationMs ?? null),
+                      ],
+                      ["Cache observation", report?.cache ?? "Not recorded"],
+                    ]}
+                  />
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="startup">
+                      <AccordionTrigger>
+                        Timing boundaries & network evidence
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <p>
+                          Engine startup combines network or cache reads and
+                          initialization. First preparation is the whole warmup
+                          response, not compilation alone. Cache observation
+                          does not establish a fully cold or fully cached run.
+                        </p>
+                        <Facts
+                          items={[
+                            [
+                              "Transfer-only duration",
+                              secondsLabel(row?.downloadMs ?? null),
+                            ],
+                            [
+                              "Initialization alone",
+                              secondsLabel(row?.initMs ?? null),
+                            ],
+                            [
+                              "Transferred bytes",
+                              bytesLabel(report?.downloadBytes ?? null),
+                            ],
+                            [
+                              "Network entries",
+                              p?.network.entries ?? "Not recorded",
+                            ],
+                          ]}
+                        />
+                        {p && <p>{p.network.note}</p>}
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </CardContent>
+              </Card>
+            </section>
+          </TabsContent>
+          <TabsContent value="v2-resources" forceMount asChild>
+            <section id="v2-resources">
+              <SectionTitle
+                number="02"
+                title="Resources over time"
+                description="Browser process measurements and whole-machine activity, labeled by scope."
+              />
+              {report ? (
+                <ResourceWorkspace key={report.id} report={report} />
+              ) : (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>No resource capture</CardTitle>
+                    <CardDescription>
+                      Choose a saved report with profiling data. Synthetic
+                      traces are not supplied.
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              )}
+            </section>
+          </TabsContent>
+          <TabsContent value="v2-requests" forceMount asChild>
+            <section id="v2-requests">
+              <SectionTitle
+                number="03"
+                title="Requests & repeated use"
+                description="Request outcomes, prompts, responses and run diagnostics."
+              />
+              <div className="v2-request-summary">
+                <div>
+                  <strong>
+                    {valid.length} / {measured.length}
+                  </strong>
+                  <span>valid measured outputs</span>
+                </div>
+                <div>
+                  <strong>
+                    {row ? `${row.completed} / ${row.attempts}` : "—"}
+                  </strong>
+                  <span>completed / attempted runs in this cohort</span>
+                </div>
+                <div>
+                  <strong>
+                    {p
+                      ? p.unloadConfirmed
+                        ? "Confirmed"
+                        : "Not confirmed"
+                      : "Not recorded"}
+                  </strong>
+                  <span>model unload</span>
+                </div>
+                <div>
+                  <strong>{secondsLabel(p?.totalMs ?? null)}</strong>
+                  <span>total run, including setup & cleanup</span>
+                </div>
+              </div>
+              <RequestExplorer
+                key={report?.id ?? row?.id}
+                samples={report?.samples ?? row?.samples ?? []}
+              />
+              {report && (
                 <Accordion type="single" collapsible>
-                  <AccordionItem value="startup">
+                  <AccordionItem value="diagnostics">
                     <AccordionTrigger>
-                      Timing boundaries & network evidence
+                      Run diagnostics & lifecycle events
                     </AccordionTrigger>
                     <AccordionContent>
-                      <p>
-                        Engine startup combines network or cache reads and
-                        initialization. First preparation is the whole warmup
-                        response, not compilation alone. Cache observation does
-                        not establish a fully cold or fully cached run.
-                      </p>
-                      <Facts
-                        items={[
-                          [
-                            "Transfer-only duration",
-                            secondsLabel(row?.downloadMs ?? null),
-                          ],
-                          [
-                            "Initialization alone",
-                            secondsLabel(row?.initMs ?? null),
-                          ],
-                          [
-                            "Transferred bytes",
-                            bytesLabel(report?.downloadBytes ?? null),
-                          ],
-                          [
-                            "Network entries",
-                            p?.network.entries ?? "Not recorded",
-                          ],
-                        ]}
-                      />
-                      {p && <p>{p.network.note}</p>}
+                      <ul>
+                        {report.diagnostics.map((d, i) => (
+                          <li key={i}>{d}</li>
+                        ))}
+                      </ul>
+                      {p && (
+                        <>
+                          <p>Stop reason: {p.stopReason}</p>
+                          <ul>
+                            {p.events
+                              .filter(
+                                (e) =>
+                                  ![
+                                    "phase",
+                                    "request-start",
+                                    "request-end",
+                                  ].includes(e.type),
+                              )
+                              .map((e, i) => (
+                                <li key={i}>
+                                  {secondsLabel(e.tMs)} · {e.type} · {e.label}
+                                </li>
+                              ))}
+                          </ul>
+                        </>
+                      )}
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
-              </CardContent>
-            </Card>
-          </section>
-          <section id="v2-resources">
-            <SectionTitle
-              number="02"
-              title="Resources over time"
-              description="Browser process measurements and whole-machine activity, labeled by scope."
-            />
-            {report ? (
-              <ResourceWorkspace key={report.id} report={report} />
-            ) : (
-              <Card>
-                <CardHeader>
-                  <CardTitle>No resource capture</CardTitle>
-                  <CardDescription>
-                    Choose a saved report with profiling data. Synthetic traces
-                    are not supplied.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            )}
-          </section>
-          <section id="v2-requests">
-            <SectionTitle
-              number="03"
-              title="Requests & repeated use"
-              description="Request outcomes, prompts, responses and run diagnostics."
-            />
-            <div className="v2-request-summary">
-              <div>
-                <strong>
-                  {valid.length} / {measured.length}
-                </strong>
-                <span>valid measured outputs</span>
+              )}
+            </section>
+          </TabsContent>
+          <TabsContent value="v2-configuration" forceMount asChild>
+            <section id="v2-configuration">
+              <SectionTitle
+                number="04"
+                title="Configuration & environment"
+                description="The settings that produced this result, with the source of each hardware detail."
+              />
+              <div className="v2-settings-grid">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      <h3>Runtime & model</h3>
+                    </CardTitle>
+                    <CardDescription>
+                      Execution and prepared artifact
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Facts
+                      items={[
+                        [
+                          "Runtime",
+                          report?.runtime ?? row?.runtime ?? "Not recorded",
+                        ],
+                        [
+                          "Backend",
+                          report?.executionBackend.toUpperCase() ??
+                            "Not recorded",
+                        ],
+                        [
+                          "Execution",
+                          report ? "Dedicated Web Worker" : "Not recorded",
+                        ],
+                        ["Parameters", parameterLabel(model.parameters)],
+                        ["Weight format", precision[artifact.encoding]],
+                        [
+                          "Weight files",
+                          bytesLabel(p?.artifact.weightShardBytes ?? null),
+                        ],
+                        [
+                          "Configured context",
+                          numberLabel(
+                            report?.settings.contextWindow ??
+                              artifact.overrides?.context_window_size ??
+                              null,
+                            "tokens",
+                            0,
+                          ),
+                        ],
+                        [
+                          "Largest valid input",
+                          numberLabel(row?.testedInput ?? null, "tokens", 0),
+                        ],
+                      ]}
+                    />
+                    <p className="v2-chart-note">
+                      Weight files are not runtime memory. Largest valid input
+                      is a tested point, not a proven context limit.
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      <h3>Workload & sampling</h3>
+                    </CardTitle>
+                    <CardDescription>
+                      Configured limits versus actual execution
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Facts
+                      items={[
+                        [
+                          "Workload",
+                          row ? workloadLabel(row.workload) : "Not recorded",
+                        ],
+                        ["Completed requests", measured.length],
+                        [
+                          "Warmups recorded",
+                          report?.samples.filter((s) => s.warmup).length ??
+                            "Not recorded",
+                        ],
+                        [
+                          p?.plan.mode === "timed"
+                            ? "Request safety cap"
+                            : "Configured repeats",
+                          report?.settings.repeats ?? "Not recorded",
+                        ],
+                        [
+                          p?.plan.sessionSchedule
+                            ? "Session target (with pauses)"
+                            : "Active target",
+                          p?.plan.activeLimitMs
+                            ? secondsLabel(p.plan.activeLimitMs)
+                            : p
+                              ? `${p.plan.measuredRequests} requests`
+                              : "Not recorded",
+                        ],
+                        [
+                          "Request pacing",
+                          p?.plan.sessionSchedule
+                            ? p.plan.sessionSchedule.requestGapMs === 0
+                              ? "Sequential · no added delay"
+                              : `${p.plan.sessionSchedule.requestGapMs / 1000} s between requests`
+                            : "Sequential · no added delay",
+                        ],
+                        [
+                          "Request windows",
+                          p?.plan.countSchedule
+                            ? "3 × 20 responses"
+                            : p?.plan.sessionSchedule
+                              ? "3 × 40 seconds"
+                              : "One window",
+                        ],
+                        [
+                          "Loaded-idle gaps",
+                          p?.plan.countSchedule || p?.plan.sessionSchedule
+                            ? "2 × 90 seconds"
+                            : "None scheduled",
+                        ],
+                        [
+                          "Reasoning mode",
+                          report?.settings.thinkingMode === "disabled"
+                            ? "Disabled explicitly"
+                            : report?.settings.thinkingMode === "enabled"
+                              ? "Enabled explicitly"
+                              : "Not applicable / not recorded",
+                        ],
+                        [
+                          "Output limit",
+                          report
+                            ? `${report.settings.maxTokens} tokens`
+                            : "Not recorded",
+                        ],
+                        [
+                          "Temperature / top-p",
+                          report
+                            ? `${report.settings.temperature} / ${report.settings.topP}`
+                            : "Not recorded",
+                        ],
+                        ["Seed", report?.settings.seed ?? "Not recorded"],
+                        [
+                          "Warmup token limit",
+                          report
+                            ? `${report.settings.warmupTokens ?? 16} tokens`
+                            : "Not recorded",
+                        ],
+                        [
+                          "Request timeout",
+                          p
+                            ? `${p.plan.requestLimitMs / 1000} seconds`
+                            : "Not recorded",
+                        ],
+                        ["Chat reset", p?.plan.resetPolicy ?? "Not recorded"],
+                      ]}
+                    />
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      <h3>Browser & device</h3>
+                    </CardTitle>
+                    <CardDescription>
+                      Captured environment, not reserved capacity
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Facts
+                      items={[
+                        ["Browser", row?.browser ?? "Not recorded"],
+                        ["Operating system", osLabel(report)],
+                        [
+                          "Logical CPUs",
+                          report?.nativeTrace?.logicalCpus ??
+                            report?.environment.hardwareConcurrency ??
+                            "Not recorded",
+                        ],
+                        ["GPU adapter hint", gpuLabel(row?.gpu)],
+                        [
+                          "Device label",
+                          report?.environment.deviceLabel ?? "Not recorded",
+                        ],
+                        ["Installed RAM", "Not recorded"],
+                        [
+                          "Resource allocation",
+                          "Browser-managed; no reservation",
+                        ],
+                        [
+                          "Native instrumentation",
+                          report?.nativeTrace ? "Attached" : "Not attached",
+                        ],
+                      ]}
+                    />
+                    <p className="v2-chart-note">
+                      Device label is user supplied. Browser identity may be
+                      reduced. Adapter hints do not establish exact GPU model or
+                      core count.
+                    </p>
+                  </CardContent>
+                </Card>
               </div>
-              <div>
-                <strong>
-                  {row ? `${row.completed} / ${row.attempts}` : "—"}
-                </strong>
-                <span>completed / attempted runs in this cohort</span>
-              </div>
-              <div>
-                <strong>
-                  {p
-                    ? p.unloadConfirmed
-                      ? "Confirmed"
-                      : "Not confirmed"
-                    : "Not recorded"}
-                </strong>
-                <span>model unload</span>
-              </div>
-              <div>
-                <strong>{secondsLabel(p?.totalMs ?? null)}</strong>
-                <span>total run, including setup & cleanup</span>
-              </div>
-            </div>
-            <RequestExplorer
-              key={report?.id ?? row?.id}
-              samples={report?.samples ?? row?.samples ?? []}
-            />
-            {report && (
               <Accordion type="single" collapsible>
-                <AccordionItem value="diagnostics">
+                <AccordionItem value="provenance">
                   <AccordionTrigger>
-                    Run diagnostics & lifecycle events
+                    Exact artifact, browser identity & reproducibility
                   </AccordionTrigger>
                   <AccordionContent>
-                    <ul>
-                      {report.diagnostics.map((d, i) => (
-                        <li key={i}>{d}</li>
-                      ))}
-                    </ul>
-                    {p && (
-                      <>
-                        <p>Stop reason: {p.stopReason}</p>
-                        <ul>
-                          {p.events
-                            .filter(
-                              (e) =>
-                                ![
-                                  "phase",
-                                  "request-start",
-                                  "request-end",
-                                ].includes(e.type),
-                            )
-                            .map((e, i) => (
-                              <li key={i}>
-                                {secondsLabel(e.tMs)} · {e.type} · {e.label}
-                              </li>
-                            ))}
-                        </ul>
-                      </>
-                    )}
+                    <Facts
+                      items={[
+                        ["Artifact", artifact.model_id],
+                        ["Revision", row?.revision ?? "Not recorded"],
+                        ["Runtime binary", report?.modelLib ?? "Not recorded"],
+                        [
+                          "Weight manifest SHA-256",
+                          p?.artifact.manifestSha256 ?? "Not recorded",
+                        ],
+                        ["GPU adapter details", row?.gpu ?? "Not recorded"],
+                        [
+                          "Browser user agent",
+                          report?.environment.userAgent ?? "Not recorded",
+                        ],
+                        [
+                          "Reported platform",
+                          report?.environment.platform ?? "Not recorded",
+                        ],
+                        ["Protocol", report?.protocol ?? "Not recorded"],
+                      ]}
+                    />
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
-            )}
-          </section>
-          <section id="v2-configuration">
-            <SectionTitle
-              number="04"
-              title="Configuration & environment"
-              description="The settings that produced this result, with the source of each hardware detail."
-            />
-            <div className="v2-settings-grid">
-              <Card>
+              <Card className="v2-evidence-card">
                 <CardHeader>
                   <CardTitle>
-                    <h3>Runtime & model</h3>
+                    <h3>Report files</h3>
                   </CardTitle>
                   <CardDescription>
-                    Execution and prepared artifact
+                    Inspect saved settings and samples, or download the JSON
+                    report.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Facts
-                    items={[
-                      [
-                        "Runtime",
-                        report?.runtime ?? row?.runtime ?? "Not recorded",
-                      ],
-                      [
-                        "Backend",
-                        report?.executionBackend.toUpperCase() ??
-                          "Not recorded",
-                      ],
-                      [
-                        "Execution",
-                        report ? "Dedicated Web Worker" : "Not recorded",
-                      ],
-                      ["Parameters", parameterLabel(model.parameters)],
-                      ["Weight format", precision[artifact.encoding]],
-                      [
-                        "Weight files",
-                        bytesLabel(p?.artifact.weightShardBytes ?? null),
-                      ],
-                      [
-                        "Configured context",
-                        numberLabel(
-                          report?.settings.contextWindow ??
-                            artifact.overrides?.context_window_size ??
-                            null,
-                          "tokens",
-                          0,
-                        ),
-                      ],
-                      [
-                        "Largest valid input",
-                        numberLabel(row?.testedInput ?? null, "tokens", 0),
-                      ],
-                    ]}
-                  />
-                  <p className="v2-chart-note">
-                    Weight files are not runtime memory. Largest valid input is
-                    a tested point, not a proven context limit.
-                  </p>
+                  <div className="v2-evidence-actions">
+                    {report && (
+                      <>
+                        <Button
+                          variant="outline"
+                          aria-label="Inspect raw report"
+                          onClick={() => onReport(report)}
+                        >
+                          <FileText size={14} />
+                          Raw report
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() =>
+                            downloadJson(
+                              report,
+                              `browser-llm-bench-${report.id}.json`,
+                            )
+                          }
+                        >
+                          <Download size={14} />
+                          Download JSON
+                        </Button>
+                      </>
+                    )}
+                    <SiteLink href="/methodology/">
+                      Methodology
+                      <ArrowUpRight size={14} />
+                    </SiteLink>
+                  </div>
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>
-                    <h3>Workload & sampling</h3>
-                  </CardTitle>
-                  <CardDescription>
-                    Configured limits versus actual execution
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Facts
-                    items={[
-                      [
-                        "Workload",
-                        row ? workloadLabel(row.workload) : "Not recorded",
-                      ],
-                      ["Completed requests", measured.length],
-                      [
-                        "Warmups recorded",
-                        report?.samples.filter((s) => s.warmup).length ??
-                          "Not recorded",
-                      ],
-                      [
-                        p?.plan.mode === "timed"
-                          ? "Request safety cap"
-                          : "Configured repeats",
-                        report?.settings.repeats ?? "Not recorded",
-                      ],
-                      [
-                        p?.plan.sessionSchedule
-                          ? "Session target (with pauses)"
-                          : "Active target",
-                        p?.plan.activeLimitMs
-                          ? secondsLabel(p.plan.activeLimitMs)
-                          : p
-                            ? `${p.plan.measuredRequests} requests`
-                            : "Not recorded",
-                      ],
-                      [
-                        "Request pacing",
-                        p?.plan.sessionSchedule
-                          ? p.plan.sessionSchedule.requestGapMs === 0
-                            ? "Sequential · no added delay"
-                            : `${p.plan.sessionSchedule.requestGapMs / 1000} s between requests`
-                          : "Sequential · no added delay",
-                      ],
-                      [
-                        "Request windows",
-                        p?.plan.countSchedule
-                          ? "3 × 20 responses"
-                          : p?.plan.sessionSchedule
-                            ? "3 × 40 seconds"
-                            : "One window",
-                      ],
-                      [
-                        "Loaded-idle gaps",
-                        p?.plan.countSchedule || p?.plan.sessionSchedule
-                          ? "2 × 90 seconds"
-                          : "None scheduled",
-                      ],
-                      [
-                        "Reasoning mode",
-                        report?.settings.thinkingMode === "disabled"
-                          ? "Disabled explicitly"
-                          : report?.settings.thinkingMode === "enabled"
-                            ? "Enabled explicitly"
-                            : "Not applicable / not recorded",
-                      ],
-                      [
-                        "Output limit",
-                        report
-                          ? `${report.settings.maxTokens} tokens`
-                          : "Not recorded",
-                      ],
-                      [
-                        "Temperature / top-p",
-                        report
-                          ? `${report.settings.temperature} / ${report.settings.topP}`
-                          : "Not recorded",
-                      ],
-                      ["Seed", report?.settings.seed ?? "Not recorded"],
-                      [
-                        "Warmup token limit",
-                        report
-                          ? `${report.settings.warmupTokens ?? 16} tokens`
-                          : "Not recorded",
-                      ],
-                      [
-                        "Request timeout",
-                        p
-                          ? `${p.plan.requestLimitMs / 1000} seconds`
-                          : "Not recorded",
-                      ],
-                      ["Chat reset", p?.plan.resetPolicy ?? "Not recorded"],
-                    ]}
-                  />
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>
-                    <h3>Browser & device</h3>
-                  </CardTitle>
-                  <CardDescription>
-                    Captured environment, not reserved capacity
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Facts
-                    items={[
-                      ["Browser", row?.browser ?? "Not recorded"],
-                      ["Operating system", osLabel(report)],
-                      [
-                        "Logical CPUs",
-                        report?.nativeTrace?.logicalCpus ??
-                          report?.environment.hardwareConcurrency ??
-                          "Not recorded",
-                      ],
-                      ["GPU adapter hint", gpuLabel(row?.gpu)],
-                      [
-                        "Device label",
-                        report?.environment.deviceLabel ?? "Not recorded",
-                      ],
-                      ["Installed RAM", "Not recorded"],
-                      [
-                        "Resource allocation",
-                        "Browser-managed; no reservation",
-                      ],
-                      [
-                        "Native instrumentation",
-                        report?.nativeTrace ? "Attached" : "Not attached",
-                      ],
-                    ]}
-                  />
-                  <p className="v2-chart-note">
-                    Device label is user supplied. Browser identity may be
-                    reduced. Adapter hints do not establish exact GPU model or
-                    core count.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-            <Accordion type="single" collapsible>
-              <AccordionItem value="provenance">
-                <AccordionTrigger>
-                  Exact artifact, browser identity & reproducibility
-                </AccordionTrigger>
-                <AccordionContent>
-                  <Facts
-                    items={[
-                      ["Artifact", artifact.model_id],
-                      ["Revision", row?.revision ?? "Not recorded"],
-                      ["Runtime binary", report?.modelLib ?? "Not recorded"],
-                      [
-                        "Weight manifest SHA-256",
-                        p?.artifact.manifestSha256 ?? "Not recorded",
-                      ],
-                      ["GPU adapter details", row?.gpu ?? "Not recorded"],
-                      [
-                        "Browser user agent",
-                        report?.environment.userAgent ?? "Not recorded",
-                      ],
-                      [
-                        "Reported platform",
-                        report?.environment.platform ?? "Not recorded",
-                      ],
-                      ["Protocol", report?.protocol ?? "Not recorded"],
-                    ]}
-                  />
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-            <Card className="v2-evidence-card">
-              <CardHeader>
-                <CardTitle>
-                  <h3>Report files</h3>
-                </CardTitle>
-                <CardDescription>
-                  Inspect saved settings and samples, or download the JSON
-                  report.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="v2-evidence-actions">
-                  {report && (
-                    <>
-                      <Button
-                        variant="outline"
-                        onClick={() => onReport(report)}
-                      >
-                        <FileText size={14} />
-                        Inspect raw report
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() =>
-                          downloadJson(
-                            report,
-                            `browser-llm-bench-${report.id}.json`,
-                          )
-                        }
-                      >
-                        <Download size={14} />
-                        Download JSON
-                      </Button>
-                    </>
-                  )}
-                  <SiteLink href="/methodology/">
-                    Measurement methodology
-                    <ArrowUpRight size={14} />
-                  </SiteLink>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
+            </section>
+          </TabsContent>
         </div>
-      </div>
+      </Tabs>
     </article>
   );
 }
