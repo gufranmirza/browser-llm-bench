@@ -134,7 +134,19 @@ def thermal_state():
 
 def host_signals():
     errors = []
-    values = {}
+    values = {
+        key: None
+        for key in [
+            "gpuDevices",
+            "hostGpuUtilizationPercent",
+            "hostGpuAllocatedBytes",
+            "hostSwapUsedBytes",
+            "hostMemoryPressureLevel",
+            "hostFreePagesBytes",
+            "hostCompressedStorageBytes",
+            "hostThermalState",
+        ]
+    }
     try:
         d = plistlib.loads(
             command(["/usr/sbin/ioreg", "-r", "-c", "AGXAccelerator", "-a", "-l"])
