@@ -38,16 +38,16 @@ export async function PublishedModelSummary({ slug }: { slug: string }) {
       <section>
         <h2>Runtime and model configuration</h2>
         <p>
-          Available pinned encodings:{" "}
+          Configured weight formats:{" "}
           {variants.map((a) => precision[a.encoding] ?? a.encoding).join("; ")}.
           Inference uses WebLLM and WebGPU in a dedicated browser worker.
         </p>
         <p>
-          <SiteLink href={model.card}>Original model card</SiteLink> ·{" "}
+          <SiteLink href={model.card}>Publisher model card</SiteLink> ·{" "}
           <SiteLink
             href={`/run/?artifact=${encodeURIComponent(variants[0].model_id)}`}
           >
-            Run this model privately
+            Run benchmark
           </SiteLink>
         </p>
       </section>
@@ -97,25 +97,23 @@ export async function PublishedModelSummary({ slug }: { slug: string }) {
               </dl>
               <p>
                 <a href={assetUrl(`reports/${row.report!.id}.json`)}>
-                  Download the published JSON evidence
+                  Download JSON report
                 </a>
               </p>
             </div>
           ))
         ) : (
           <p>
-            No measured benchmark report is published for this model yet.
-            Available artifacts are configurations to test, not evidence of
-            performance or compatibility.
+            No benchmark report is published for this model yet. The listed
+            packages are available to test; their performance has not been
+            measured here.
           </p>
         )}
         <p>
           Warmup is excluded from performance medians. Tokenizers and output
           lengths differ across models. These measurements do not evaluate task
           quality.{" "}
-          <SiteLink href="/methodology/">
-            Measurement methodology and resource scopes.
-          </SiteLink>
+          <SiteLink href="/methodology/">Measurement definitions</SiteLink>
         </p>
       </section>
     </article>

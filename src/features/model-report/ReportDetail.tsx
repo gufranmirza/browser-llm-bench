@@ -29,6 +29,8 @@ export function ReportDetail({ report: r }: { report: Report }) {
         </dd>
         <dt>Resource policy</dt>
         <dd>{r.resourcePolicy}</dd>
+        <dt>Model package</dt>
+        <dd className="mono">{r.model}</dd>
         <dt>Artifact revision</dt>
         <dd className="mono">{r.revision}</dd>
         <dt>Protocol / workload</dt>
@@ -55,7 +57,7 @@ export function ReportDetail({ report: r }: { report: Report }) {
             <dt>Profile protocol</dt>
             <dd>
               {r.profile.plan.mode === "timed"
-                ? `${r.profile.plan.activeLimitMs! / 60000}-minute ${r.profile.plan.sessionSchedule ? "intermittent session" : "active pilot"}`
+                ? `${r.profile.plan.activeLimitMs! / 60000}-minute ${r.profile.plan.sessionSchedule ? "intermittent session" : "continuous requests"}`
                 : `${r.profile.plan.measuredRequests} measured requests`}{" "}
               · {r.profile.points.length} resource samples · unload{" "}
               {r.profile.unloadConfirmed ? "confirmed" : "not confirmed"}
@@ -69,8 +71,11 @@ export function ReportDetail({ report: r }: { report: Report }) {
             : (r.memory.jsHeapBytes / 1e6).toFixed(1) + " MB"}{" "}
           · main page only
         </dd>
-        <dt>GPU memory / energy / thermals</dt>
-        <dd>Unavailable</dd>
+        <dt>Physical GPU memory / model energy / thermals</dt>
+        <dd>
+          Not measured. Available browser allocations and host signals appear in
+          the full report.
+        </dd>
         <dt>Max event-loop delay</dt>
         <dd>
           {r.responsiveness.maxEventLoopDelayMs.toFixed(1)} ms ·{" "}
@@ -81,9 +86,13 @@ export function ReportDetail({ report: r }: { report: Report }) {
       {r.samples.map((s, i) => (
         <details key={i} className="sample">
           <summary>
-            {s.warmup ? "Warmup (excluded)" : `Measured request ${i}`} ·{" "}
-            {s.inputTokens ?? "—"} → {s.outputTokens ?? "—"} tokens ·{" "}
-            {s.valid ? "valid output" : "invalid output"}
+            {s.warmup
+              ? "Warmup (excluded)"
+              : `Measured request ${s.requestIndex ?? r.samples.slice(0, i + 1).filter((sample) => !sample.warmup).length}`}{" "}
+            · {s.inputTokens ?? "—"} → {s.outputTokens ?? "—"} tokens ·{" "}
+            {s.valid
+              ? "passed basic output checks"
+              : "failed basic output checks"}
           </summary>
           <p>
             First output: {s.firstOutputMs?.toFixed(1) ?? "—"} ms · response:{" "}
@@ -105,7 +114,7 @@ export function ReportDetail({ report: r }: { report: Report }) {
       </ul>
       <Button onClick={() => downloadJson(r, `browser-llm-bench-${r.id}.json`)}>
         <Download size={15} />
-        Export complete JSON
+        Download JSON
       </Button>
     </>
   );

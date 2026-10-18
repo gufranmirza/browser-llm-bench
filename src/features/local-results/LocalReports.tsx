@@ -60,6 +60,9 @@ export function LocalReports({ reports }: { reports: Report[] }) {
               />
             </label>
           </div>
+          <p className="mobile-table-hint">
+            Scroll sideways for timings and status.
+          </p>
           <div className="panel table-wrap">
             <table>
               <thead>

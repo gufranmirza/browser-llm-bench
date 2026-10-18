@@ -219,8 +219,8 @@ export default function ModelReport({
           {model.name}
         </h1>
         <div className="empty">
-          <h2>No measured results for this selection</h2>
-          <p>This model or run has no saved measurement here.</p>
+          <h2>No measured results</h2>
+          <p>No saved report matches the selected model and configuration.</p>
           <Button asChild variant="outline">
             <SiteLink href="/">Browse tested models</SiteLink>
           </Button>

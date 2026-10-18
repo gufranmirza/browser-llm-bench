@@ -30,14 +30,12 @@ export async function PublishedLeaderboard() {
           </div>
           <div className="lb-intro-copy">
             <p>
-              Compare open models running locally in the browser across
-              generation speed, first-output latency, response time, and CPU,
-              GPU and memory usage.
+              Compare browser LLMs by generation speed, first-output latency,
+              response time, memory and resource use.
             </p>
             <p>
-              Results come from saved benchmark runs. Task quality is not
-              evaluated yet. Device, runtime, workload and output lengths affect
-              comparisons.
+              Results describe the recorded device, browser and workload. Answer
+              accuracy is not tested; output lengths differ across models.
             </p>
           </div>
         </div>
@@ -101,9 +99,7 @@ export async function PublishedLeaderboard() {
           Request metrics are medians. Peak memory is a sampled sum of Chrome
           process footprints, not deduplicated RAM. Missing readings stay
           unavailable.{" "}
-          <SiteLink href="/methodology/">
-            Read the measurement definitions.
-          </SiteLink>
+          <SiteLink href="/methodology/">Measurement definitions</SiteLink>
         </p>
       </section>
     </div>

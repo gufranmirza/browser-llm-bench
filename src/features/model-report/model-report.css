@@ -637,13 +637,6 @@
   color: #858a91;
   font-size: 12px;
 }
-[data-slot="dialog-overlay"] {
-  position: fixed;
-  inset: 0;
-  background: #11182755;
-  backdrop-filter: blur(3px);
-  z-index: 100;
-}
 .v2-prompt-dialog {
   position: fixed;
   top: 50%;
@@ -851,17 +844,6 @@
 .v2-prompt-dialog [data-slot="dialog-description"] {
   font-size: 13px;
   line-height: 1.6;
-}
-.v2-prompt-dialog .sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }
 .v2-prompt-dialog > [data-slot="dialog-close"] {
   display: flex;
@@ -1182,5 +1164,34 @@
 @media (max-width: 760px) {
   .model-v2 .v2-stage-filters {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .model-v2 .v2-section-nav {
+    flex-wrap: wrap;
+    overflow: visible;
+    background: white;
+    gap: 4px;
+  }
+  .model-v2 .v2-section-nav button {
+    flex: 1 1 calc(50% - 4px);
+    justify-content: center;
+    min-height: 40px;
+    padding: 8px;
+  }
+  .v2-section-content > section {
+    scroll-margin-top: calc(var(--site-header-offset) + 115px);
+  }
+  .v2-dialog-footer {
+    gap: 8px;
+  }
+  .v2-dialog-footer > span {
+    white-space: nowrap;
+  }
+  .v2-dialog-footer .button {
+    font-size: 12px;
+    gap: 6px;
+    padding: 10px;
   }
 }

@@ -65,12 +65,8 @@ export function ProfileTimeline({
       <section id="profiling-plan" className="profile-view">
         <h2>Resource timeline</h2>
         <p>
-          This evidence predates continuous profiling.{" "}
-          {report?.workload === "repeat"
-            ? "Legacy three-request smoke test. "
-            : ""}
-          Run a new 3-, 10-, or 100-request test, or a one- or eight-minute
-          active pilot, to record phases and available resource signals.
+          This report has no continuous resource samples. Enable resource
+          sampling on a new run to record a timeline.
         </p>
       </section>
     );
@@ -473,8 +469,8 @@ export function ProfileTimeline({
         </table>
       </div>
       <p className="metric-footnote">
-        One run, one device and one workload. Median and range describe these
-        observations; no p95 is inferred from a small sample.
+        These statistics describe requests within this run, not variation across
+        independent runs.
       </p>
       <details className="detail-disclosure">
         <summary>Signal availability, scope & sampling cost</summary>

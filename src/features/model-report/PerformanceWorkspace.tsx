@@ -60,7 +60,7 @@ const metrics = [
     unit: "s",
     color: "#7c3aed",
     direction: "Lower is faster",
-    note: "From the worker starting the request to the completed response stream. Excludes model loading, chat reset and UI rendering. Actual output length; no 500-token projection.",
+    note: "From the worker starting the request to the completed response stream. Excludes model loading, chat reset and UI rendering. Uses the actual response length.",
   },
 ] as const;
 const format = (n: number | null, digits = 2) =>
@@ -156,7 +156,7 @@ function MetricSection({
               <h3>{metric.title}</h3>
             </CardTitle>
             <CardDescription>
-              Variation within this run · warmup and invalid outputs excluded
+              Per-request measurements · warmup and invalid outputs excluded
             </CardDescription>
           </div>
           <div className="v2-metric-headline" style={{ color: metric.color }}>
@@ -374,9 +374,8 @@ export function PerformanceWorkspace({
         />
       ))}
       <p className="v2-chart-note">
-        These views describe this selection, not a cross-model ranking or a
-        historical trend. Repeated requests within one run are not independent
-        benchmark runs.
+        These charts describe requests within one run. They do not show
+        variation across independent runs.
       </p>
     </div>
   );

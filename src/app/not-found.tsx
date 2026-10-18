@@ -1,3 +1,4 @@
+import { Button } from "../components/ui/button";
 import { SiteLink } from "../components/SiteLink";
 export const metadata = {
   robots: {
@@ -9,8 +10,11 @@ export const metadata = {
 export default function NotFound() {
   return (
     <div className="empty">
-      <h1>Page not found.</h1>
-      <SiteLink href="/">Return to the leaderboard</SiteLink>
+      <h1>Page not found</h1>
+      <p>The requested page is not available.</p>
+      <Button asChild variant="outline">
+        <SiteLink href="/">Back to leaderboard</SiteLink>
+      </Button>
     </div>
   );
 }

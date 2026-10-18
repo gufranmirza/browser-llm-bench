@@ -130,15 +130,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
         <Dialog.Portal>
           <Dialog.Overlay className="dialog-overlay" />
           <Dialog.Content className="dialog">
-            <Dialog.Close className="dialog-close" aria-label="Close report">
-              <X size={20} />
-            </Dialog.Close>
-            <div className="section-kicker">CAPTURED REPORT</div>
-            <Dialog.Title>{selected?.model}</Dialog.Title>
-            <Dialog.Description>
-              Recorded settings, prompts, responses and timing boundaries.
-            </Dialog.Description>
-            {selected && <ReportDetail report={selected} />}
+            <div className="dialog-header">
+              <Dialog.Close className="dialog-close" aria-label="Close report">
+                <X size={20} />
+              </Dialog.Close>
+              <Dialog.Title>Raw report</Dialog.Title>
+              <Dialog.Description>
+                Saved settings, samples and diagnostics.
+              </Dialog.Description>
+            </div>
+            <div className="dialog-body">
+              {selected && <ReportDetail report={selected} />}
+            </div>
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>

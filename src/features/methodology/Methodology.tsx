@@ -63,27 +63,31 @@ export function Methodology({ section }: { section: string | null }) {
             <div className="dataset-notice local">
               <Info size={16} />
               <span>
-                <strong>Today:</strong> measured performance and scoped resource
-                traces. <strong>Later:</strong> task accuracy and browser
-                suitability. No intelligence index, resource score or overall
-                model score is currently calculated.
+                <strong>Published:</strong> request timings and resource
+                samples. Answer accuracy and the proposed suitability score are
+                not evaluated yet. No overall model score is currently
+                calculated.
               </span>
             </div>
             <p>
-              A fast model is not necessarily a suitable model. Browser
-              deployment also depends on memory headroom, page responsiveness,
-              startup cost and resources consumed while working or idle.
+              Browser deployment also depends on memory use, page
+              responsiveness, load time and resources consumed while the model
+              is idle.
             </p>
           </section>
           <section id="protocol">
             <span className="section-number">02 /</span>
             <h2>Run protocol</h2>
+            <p>
+              The published comparison uses the session below. Local runs can
+              use other schedules and settings.
+            </p>
             <div className="panel table-wrap">
               <table>
                 <thead>
                   <tr>
                     <th>Stage</th>
-                    <th>Current 60-request session</th>
+                    <th>Published 60-request session</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -235,10 +239,10 @@ export function Methodology({ section }: { section: string | null }) {
             <span className="section-number">04 /</span>
             <h2>Resource scope and calculations</h2>
             <p>
-              Every resource needs a scope, time window and coverage.
-              Browser-only reports expose less than reports paired with the
-              native macOS collector. A missing native signal is unavailable,
-              never zero.
+              Resource measurements identify their process scope, time window
+              and sample coverage. Browser-only reports expose less than reports
+              paired with the native macOS collector. A missing native signal is
+              unavailable, never zero.
             </p>
             <dl className="method-definitions">
               <dt>Browser memory</dt>
@@ -361,14 +365,11 @@ export function Methodology({ section }: { section: string | null }) {
             <span className="section-number">05 /</span>
             <h2>Planned browser suitability score</h2>
             <p>
-              <strong>
-                The current release publishes measurements, not a suitability
-                percentage.
-              </strong>{" "}
-              Task quality, task indexes and a scored evaluation suite have not
-              been implemented. Basic output validity requires non-empty text,
-              positive token counts, no Unicode replacement characters and no
-              interruption. It does not establish correctness.
+              <strong>No suitability score is published yet.</strong> Answer
+              accuracy has not been evaluated with a task suite. Basic output
+              validity requires non-empty text, positive token counts, no
+              Unicode replacement characters and no interruption. It does not
+              establish correctness.
             </p>
             <div className="panel" style={{ padding: "20px 24px" }}>
               <strong>Proposed headline formula</strong>
@@ -417,19 +418,20 @@ export function Methodology({ section }: { section: string | null }) {
             <p>
               Compare matching protocols, hardware, browser/runtime versions,
               context, cache, precision, thinking mode and visibility
-              conditions. The leaderboard shows one saved result per artifact;
-              rows may come from different environments. Token rates use each
-              model’s tokenizer, and actual output lengths differ. One session
-              cannot establish a population failure rate or variability across
-              independent runs.
+              conditions. The leaderboard groups reports by recorded
+              environment, settings and protocol, then shows one result per
+              model package. Token rates use each model’s tokenizer, and actual
+              output lengths differ. One session cannot establish a population
+              failure rate or variability across independent runs.
             </p>
             <p>
               Published JSON reports load automatically from the repository.
-              Imported reports remain user-supplied evidence. Charts use
-              recorded run boundaries and aligned clocks; counter intervals
-              crossing a boundary are excluded, while energy integration uses
-              clipped overlap. Missing coverage, clock uncertainty and other
-              host activity remain limitations.
+              Imported reports stay private in the user’s browser and do not
+              change the public leaderboard. Charts use recorded run boundaries
+              and aligned clocks; counter intervals crossing a boundary are
+              excluded, while energy integration uses clipped overlap. Missing
+              coverage, clock uncertainty and other host activity remain
+              limitations.
             </p>
           </section>
         </article>

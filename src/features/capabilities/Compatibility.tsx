@@ -22,7 +22,7 @@ export function Compatibility({
       <div className="page-heading">
         <div>
           <h1>Browser compatibility</h1>
-          <p>Implemented runtimes and captured device support.</p>
+          <p>Runtime support and recorded test outcomes.</p>
         </div>
         <Button onClick={onRun}>
           Test this browser <ArrowUpRight size={15} />
@@ -31,8 +31,8 @@ export function Compatibility({
       <div className="dataset-notice">
         <Info size={16} />
         <span>
-          This matrix shows implementation coverage. Browser and device
-          compatibility requires an actual local run.
+          This page lists implemented runtimes. A successful run applies only to
+          the model, browser and device recorded in its report.
         </span>
       </div>
       <div className="panel table-wrap compatibility">
@@ -50,14 +50,12 @@ export function Compatibility({
             <tr>
               <td>
                 <strong>{local?.runtime ?? "WebLLM / WebGPU"}</strong>
-                <small>{local?.model ?? "Pinned WebGPU artifacts"}</small>
+                <small>{local?.model ?? "Configured WebGPU packages"}</small>
               </td>
               <td>
                 <Status value={local ? local.status : "Untested"} />
                 <small>
-                  {local
-                    ? local.environment.deviceLabel + " · inspect environment"
-                    : "No recorded run"}
+                  {local ? local.environment.deviceLabel : "No recorded run"}
                 </small>
               </td>
               <td>
@@ -74,7 +72,7 @@ export function Compatibility({
               <tr key={n}>
                 <td>
                   <strong>{n}</strong>
-                  <small>Future runtime adapter</small>
+                  <small>Not implemented</small>
                 </td>
                 <td>
                   <Status value="Untested" />
@@ -103,13 +101,10 @@ export function Compatibility({
             "Unsupported",
             "A required capability is missing. Requirements vary by model and encoding.",
           ],
-          [
-            "Untested",
-            "No evidence exists for this exact configuration. It is not assumed to work or fail.",
-          ],
+          ["Untested", "No run is recorded for this configuration."],
           [
             "Failed",
-            "A supported configuration was attempted but initialization, generation, or output validation failed.",
+            "Initialization, generation or output checks failed during an attempted run.",
           ],
         ].map(([t, d]) => (
           <section className="panel" key={t}>

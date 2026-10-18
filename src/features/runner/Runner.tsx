@@ -187,7 +187,7 @@ export default function Runner({
       <div className="page-heading">
         <div>
           <h1>Run a browser benchmark</h1>
-          <p>Choose a model, its weight format and a reproducible workload.</p>
+          <p>Choose a model, weight format and request schedule.</p>
         </div>
         <div className="toolbar-actions">
           <Button asChild variant="outline">
@@ -232,15 +232,15 @@ export default function Runner({
                 value: m.slug,
                 label: m.name,
                 visual: <ProviderLogo family={m.family} model={m.name} />,
-                description: `${m.family} · ${m.parameters.toLocaleString(undefined, { maximumFractionDigits: 2 })}B parameters${m.available ? "" : " · runtime integration needed"}`,
-                group: m.available ? "Browser packages" : "Research candidates",
+                description: `${m.family} · ${m.parameters.toLocaleString(undefined, { maximumFractionDigits: 2 })}B parameters${m.available ? "" : " · not runnable here"}`,
+                group: m.available ? "Runnable models" : "Not runnable here",
               }))}
             />
           </div>
           <small className="field-note">
             {filteredModels.length} matching models · {modelGroups.length} with
-            browser packages · {candidates.length} researched candidates at or
-            below 8B
+            browser packages · {candidates.length} catalog candidates at or
+            below 8B parameters
           </small>
           {pin ? (
             <>
@@ -313,20 +313,20 @@ export default function Runner({
                   </div>
                 </div>
               )}
-              <h3>Runtime integration needed</h3>
+              <h3>Browser package unavailable</h3>
               <p>
-                {candidate?.name} has no verified WebLLM package in this
-                catalog. It can be selected for planning, but cannot run in this
-                harness yet.
+                {candidate?.name} has no supported WebLLM package in this
+                catalog. You can review its available formats, but cannot run it
+                here.
               </p>
               <p>
-                <strong>Published GGUF formats:</strong>{" "}
+                <strong>GGUF formats (not supported here):</strong>{" "}
                 {candidate?.gguf.join(", ") || "None verified"}
               </p>
               <p>
                 <strong>ONNX artifacts:</strong>{" "}
                 {candidate?.onnx
-                  ? "Found; browser compatibility not yet validated"
+                  ? "Found; this runner does not support ONNX yet"
                   : "None verified"}
               </p>
               <SiteLink
@@ -335,7 +335,7 @@ export default function Runner({
                 target="_blank"
                 rel="noreferrer"
               >
-                View source model <ArrowUpRight size={14} />
+                Publisher model card <ArrowUpRight size={14} />
               </SiteLink>
             </div>
           )}
@@ -430,9 +430,9 @@ export default function Runner({
                     {numberField("Top-p", "topP", 0.01, 1, 0.05)}
                     {numberField("Seed", "seed", 0, 2147483647)}
                     <div className="runner-select-field">
-                      <span>Thinking</span>
+                      <span>Reasoning mode</span>
                       <Select
-                        label="Thinking"
+                        label="Reasoning mode"
                         disabled={active || !pin?.thinkingDisabled}
                         value={
                           pin?.thinkingDisabled && settings.thinking
@@ -460,8 +460,8 @@ export default function Runner({
                   </div>
                   <p className="field-note">
                     The context budget includes the prompt and output. Output
-                    may end before the token limit. Changed settings create a
-                    different comparison setup.
+                    may end before the token limit. Compare runs with the same
+                    settings.
                   </p>
                   <Button
                     variant="ghost"
@@ -470,12 +470,14 @@ export default function Runner({
                     disabled={active}
                     onClick={() => setSettings(defaultRunSettings(work))}
                   >
-                    Reset generation & safety defaults
+                    Reset settings
                   </Button>
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="capture">
-                <AccordionTrigger>Warmup, resources & safety</AccordionTrigger>
+                <AccordionTrigger>
+                  Warmup, resource sampling & limits
+                </AccordionTrigger>
                 <AccordionContent>
                   <div className="runner-field-grid">
                     {numberField("Warmup requests", "warmups", 0, 5)}
@@ -540,7 +542,7 @@ export default function Runner({
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="prompt">
-                <AccordionTrigger>Exact prompts & artifact</AccordionTrigger>
+                <AccordionTrigger>Prompts & model files</AccordionTrigger>
                 <AccordionContent>
                   {(work === "repeat"
                     ? workload(work).slice(0, 1)
@@ -615,10 +617,10 @@ export default function Runner({
               <Button onClick={run} disabled={!pin || !!validationError}>
                 <Play size={15} />
                 {!pin
-                  ? "Integration required"
+                  ? "Model unavailable"
                   : compatible
                     ? "Run benchmark"
-                    : "Check & record unsupported"}
+                    : "Record compatibility result"}
               </Button>
             )}
             <small>
@@ -646,10 +648,10 @@ export default function Runner({
             <h3>{phase}</h3>
             <p>
               {active
-                ? "All model computation is happening in this browser."
+                ? "Requests run locally in a dedicated Web Worker."
                 : last
-                  ? "The report includes timing boundaries, settings and diagnostics."
-                  : "One model. A reproducible protocol. Measurements you can inspect."}
+                  ? "Open the report to view request timings, settings and resource samples."
+                  : "Select a model and schedule, then start the benchmark."}
             </p>
           </div>
           <div className="run-session-progress">
@@ -672,7 +674,7 @@ export default function Runner({
           />
           <div className="output-label">
             <span>GENERATED OUTPUT</span>
-            <span>Not a quality evaluation</span>
+            <span>Answer accuracy is not tested</span>
           </div>
           <pre className="output">
             {output || "Model output will appear here during the run."}
@@ -681,7 +683,7 @@ export default function Runner({
             <>
               <div className="run-metrics">
                 <div>
-                  <small>Engine ready</small>
+                  <small>Model load</small>
                   <strong>
                     {last.loadMs === null
                       ? "—"
@@ -689,7 +691,7 @@ export default function Runner({
                   </strong>
                 </div>
                 <div>
-                  <small>First output¹</small>
+                  <small>First-output latency¹</small>
                   <strong>
                     {last.samples
                       .find((s) => !s.warmup)
@@ -698,7 +700,7 @@ export default function Runner({
                   </strong>
                 </div>
                 <div>
-                  <small>Decode speed²</small>
+                  <small>Generation speed²</small>
                   <strong>
                     {last.samples
                       .find((s) => !s.warmup)
@@ -719,7 +721,7 @@ export default function Runner({
                     downloadJson(last, `browser-llm-bench-${last.id}.json`)
                   }
                 >
-                  Download report <ArrowUpRight size={15} />
+                  Download JSON <ArrowUpRight size={15} />
                 </Button>
               </div>
               <p className="field-note">
@@ -736,14 +738,15 @@ export default function Runner({
       <section className="panel prompt-panel">
         <h2>What gets measured</h2>
         <p>
-          ¹ Request dispatch inside the worker to the first non-empty streamed
-          text. This may contain multiple tokens. ² WebLLM’s tokenizer-based
-          autoregressive decode throughput, never stream chunks per second.
+          ¹ First-output latency: time from request start to the first non-empty
+          text chunk in the worker. ² Generation speed: decoding tokens per
+          second, reported by WebLLM. The summary above shows the first measured
+          request; the full report includes all requests.
         </p>
         <p>
           Actual token counts, finish reasons, warmups and timing boundaries are
-          saved with the report. A completed request passes a basic output
-          check; it is not a quality or intelligence score.
+          saved with the report. Basic output checks do not establish answer
+          accuracy.
         </p>
       </section>
       {(current?.profile || last?.profile) && (

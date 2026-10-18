@@ -14,18 +14,18 @@ export function LocalReportView() {
       <div className="empty">
         <h1>Local report unavailable</h1>
         <p>
-          This report belongs to the browser where it was run. Download it there
-          to keep a copy.
+          This report is not saved in this browser. Open the browser where you
+          ran it, or import a downloaded JSON report from Local reports.
         </p>
-        <SiteLink href="/run/">Run a benchmark</SiteLink>
+        <SiteLink href="/local-results/">Open local reports</SiteLink>
       </div>
     );
   const row = reportRow(report);
   return (
     <>
       <p className="notice">
-        Private browser result · not published to the leaderboard.{" "}
-        <SiteLink href="/run/">Configure another run</SiteLink>
+        Private report · saved in this browser only.{" "}
+        <SiteLink href="/run/">Run another benchmark</SiteLink>
       </p>
       <ModelReport
         localReportId={report.id}

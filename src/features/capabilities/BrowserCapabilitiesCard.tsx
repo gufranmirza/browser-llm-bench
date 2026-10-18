@@ -14,7 +14,7 @@ import {
   RefreshCw,
   Zap,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { SiteLink } from "../../components/SiteLink";
 import {
   Accordion,
@@ -34,6 +34,13 @@ import type { BrowserCapabilities } from "./detect";
 import { detectBrowserCapabilities } from "./detect";
 
 import { downloadJson } from "../../lib/download";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "../../components/ui/dialog";
 import "./capabilities.css";
 const gib = (n: number | null) =>
   n === null
@@ -73,6 +80,28 @@ export function useBrowserCapabilities() {
   }, [revision]);
   return { value, checking, error, refresh: () => setRevision((n) => n + 1) };
 }
+function CapabilityDetail({
+  label,
+  value,
+  detail,
+  children,
+}: {
+  label: string;
+  value?: string;
+  detail: string;
+  children: ReactNode;
+}) {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="capability-info-dialog">
+        <DialogTitle>{label}</DialogTitle>
+        {value && <p className="capability-info-value">{value}</p>}
+        <DialogDescription>{detail}</DialogDescription>
+      </DialogContent>
+    </Dialog>
+  );
+}
 function Fact({
   icon: Icon,
   label,
@@ -89,14 +118,16 @@ function Fact({
       <Icon size={16} aria-hidden="true" />
       <span>{label}</span>
       <strong title={value}>{value}</strong>
-      <button
-        type="button"
-        className="capability-info"
-        aria-label={`${label}: ${detail}`}
-        title={detail}
-      >
-        <Info size={14} />
-      </button>
+      <CapabilityDetail label={label} value={value} detail={detail}>
+        <button
+          type="button"
+          className="capability-info"
+          aria-label={`About ${label.toLowerCase()}`}
+          title={detail}
+        >
+          <Info size={14} />
+        </button>
+      </CapabilityDetail>
     </div>
   );
 }
@@ -118,9 +149,9 @@ export function BrowserCapabilitiesCard({
       <CardHeader>
         <div className="capability-heading">
           <div>
-            <CardTitle>Everything runs on your device</CardTitle>
+            <CardTitle>Browser capabilities</CardTitle>
             <CardDescription>
-              Browser-reported capabilities, detected locally. No capability
+              Browser and device information, checked locally. No capability
               data is uploaded.
             </CardDescription>
           </div>
@@ -191,32 +222,38 @@ export function BrowserCapabilitiesCard({
             <div className="capability-feature-heading">
               <Zap size={16} />
               <strong>Feature support</strong>
-              <span>Focus or hover for details</span>
+              <span>Select a feature for details</span>
             </div>
             <div className="capability-features">
               {value.features.map((f) => (
-                <button
-                  type="button"
+                <CapabilityDetail
                   key={f.name}
-                  className={`capability-chip ${f.status}`}
-                  title={`${f.status}: ${f.detail}`}
-                  aria-label={`${f.name}: ${f.status}. ${f.detail}`}
+                  label={f.name}
+                  value={f.status}
+                  detail={f.detail}
                 >
-                  {f.status === "available" || f.status === "exposed" ? (
-                    <CheckCircle2 size={12} />
-                  ) : (
-                    <MinusCircle size={12} />
-                  )}
-                  <span>{f.name}</span>
-                  {f.status === "downloadable" && (
-                    <small>download needed</small>
-                  )}
-                </button>
+                  <button
+                    type="button"
+                    className={`capability-chip ${f.status}`}
+                    title={`${f.status}: ${f.detail}`}
+                    aria-label={`${f.name}: ${f.status}. ${f.detail}`}
+                  >
+                    {f.status === "available" || f.status === "exposed" ? (
+                      <CheckCircle2 size={12} />
+                    ) : (
+                      <MinusCircle size={12} />
+                    )}
+                    <span>{f.name}</span>
+                    {f.status === "downloadable" && (
+                      <small>download needed</small>
+                    )}
+                  </button>
+                </CapabilityDetail>
               ))}
             </div>
             <Accordion type="single" collapsible>
               <AccordionItem value="details">
-                <AccordionTrigger>Full capability details</AccordionTrigger>
+                <AccordionTrigger>All capability details</AccordionTrigger>
                 <AccordionContent>
                   <div className="capability-details">
                     <dl>
@@ -277,7 +314,7 @@ export function BrowserCapabilitiesCard({
                       }
                     >
                       <Download size={14} />
-                      Download details
+                      Download JSON
                     </Button>
                   </div>
                   <p className="field-note">

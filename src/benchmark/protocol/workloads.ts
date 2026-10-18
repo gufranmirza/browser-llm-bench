@@ -1,29 +1,28 @@
 export const workloadOptions = [
   {
     id: "short",
-    name: "Short exchange",
-    detail: "Short input · up to 64 output tokens",
+    name: "Short prompt",
+    detail: "One short prompt; output limit is configurable",
   },
   {
     id: "long-input",
-    name: "Read & respond",
-    detail: "Longer input · up to 64 output tokens",
+    name: "Long prompt",
+    detail: "Summarize a longer passage",
   },
   {
     id: "long-output",
-    name: "Sustained generation",
-    detail: "Short input · up to 256 output tokens",
+    name: "Long response",
+    detail: "Short prompt with a larger default output limit",
   },
   {
     id: "repeat",
     name: "Repeated requests",
-    detail:
-      "Counted or timed requests, including the 60-request comparison session",
+    detail: "Repeat the same prompt using a counted or timed schedule",
   },
   {
     id: "context",
     name: "Context sweep",
-    detail: "3 increasing prompts · 64 output tokens each",
+    detail: "Three prompts with increasing input lengths",
   },
 ];
 const short =

@@ -226,7 +226,7 @@ const faqs = [
   ],
   [
     "How are the 60 requests scheduled?",
-    "One model is loaded and warmed up once. We send 20 requests sequentially, immediately starting the next after completion, then leave the model loaded for 90 seconds. We repeat this for three windows: 60 measured requests total. The three windows share one session; they are not independent trials. Older timed runs remain available under Saved reports.",
+    "One model is loaded and warmed up once. We send 20 requests sequentially, immediately starting the next after completion, then leave the model loaded for 90 seconds. We repeat this for three windows: 60 measured requests total. The three windows share one session; they are not independent trials. Each report records its own request schedule.",
   ],
   [
     "What does browser memory include?",
@@ -238,7 +238,7 @@ const faqs = [
   ],
   [
     "Does a faster model give better answers?",
-    "These runs measure performance and resources using a repeated prompt. A completed request is not an accuracy check. Task quality and browser-suitability scoring are planned; neither an intelligence index nor an overall score is assigned here.",
+    "These runs measure performance and resources using a repeated prompt. Basic output checks do not establish answer accuracy. Task quality and browser-suitability scoring are planned; neither an intelligence index nor an overall score is assigned here.",
   ],
   [
     "Why are some measurements unavailable?",
@@ -414,14 +414,12 @@ export default function LeaderboardPage({ allRows }: { allRows: Row[] }) {
           </div>
           <div className="lb-intro-copy">
             <p>
-              Compare open models running locally in the browser across
-              generation speed, first-output latency, response time, and CPU,
-              GPU and memory usage.
+              Compare browser LLMs by generation speed, first-output latency,
+              response time, memory and resource use.
             </p>
             <p>
-              Results come from saved benchmark runs. Task quality is not
-              evaluated yet. For measurement definitions and comparison notes,
-              see our{" "}
+              Results describe the recorded device, browser and workload. Answer
+              accuracy is not tested. Read the comparison notes in the{" "}
               <SiteLink
                 href={`/?${faqQuery}`}
                 onClick={(e) => {
@@ -592,118 +590,126 @@ export default function LeaderboardPage({ allRows }: { allRows: Row[] }) {
           </span>
         </div>
         {rows.length ? (
-          <Card className="lb-table">
-            <Table aria-label="Browser model leaderboard">
-              <TableHeader>
-                <TableRow>
-                  {head("name", "Model")}
-                  <TableHead>Creator</TableHead>
-                  {keys.map((k) =>
-                    head(
-                      k,
-                      k === "firstOutputMs"
-                        ? "Latency"
-                        : k === "peakMemory"
-                          ? "Peak memory"
-                          : k === "idleMemory"
-                            ? "Loaded idle"
-                            : k === "releasedMemory"
-                              ? "After unload"
-                              : k === "decode"
-                                ? "Speed"
-                                : specs[k].label,
-                      specs[k].unit +
-                        (k === "decode"
-                          ? " ↑"
-                          : k === "gpuTime" || k === "cpu" || k === "power"
-                            ? ""
-                            : " ↓"),
-                    ),
-                  )}
-                  <TableHead>
-                    Requests<small>completed / scheduled</small>
-                  </TableHead>
-                  <TableHead>Details</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {rows.map((e) => (
-                  <TableRow key={e.row.id}>
-                    <TableCell>
-                      <SiteLink className="lb-model" href={href(e.row, back)}>
-                        <ProviderLogo
-                          family={e.row.artifact.model.family}
-                          model={e.row.artifact.model.name}
-                        />
-                        <span>
-                          <strong>{name(e.row)}</strong>
-                          <small>
-                            {parameterLabel(e.row.artifact.model.parameters)} ·{" "}
-                            {e.row.artifact.encoding}
-                          </small>
+          <>
+            <p className="mobile-table-hint">
+              Scroll sideways to see all metrics.
+            </p>
+            <Card className="lb-table">
+              <Table aria-label="Browser model leaderboard">
+                <TableHeader>
+                  <TableRow>
+                    {head("name", "Model")}
+                    <TableHead>Creator</TableHead>
+                    {keys.map((k) =>
+                      head(
+                        k,
+                        k === "firstOutputMs"
+                          ? "Latency"
+                          : k === "peakMemory"
+                            ? "Peak memory"
+                            : k === "idleMemory"
+                              ? "Loaded idle"
+                              : k === "releasedMemory"
+                                ? "After unload"
+                                : k === "decode"
+                                  ? "Speed"
+                                  : specs[k].label,
+                        specs[k].unit +
+                          (k === "decode"
+                            ? " ↑"
+                            : k === "gpuTime" || k === "cpu" || k === "power"
+                              ? ""
+                              : " ↓"),
+                      ),
+                    )}
+                    <TableHead>
+                      Requests<small>completed / scheduled</small>
+                    </TableHead>
+                    <TableHead>Details</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {rows.map((e) => (
+                    <TableRow key={e.row.id}>
+                      <TableCell>
+                        <SiteLink className="lb-model" href={href(e.row, back)}>
+                          <ProviderLogo
+                            family={e.row.artifact.model.family}
+                            model={e.row.artifact.model.name}
+                          />
+                          <span>
+                            <strong>{name(e.row)}</strong>
+                            <small>
+                              {parameterLabel(e.row.artifact.model.parameters)}{" "}
+                              · {e.row.artifact.encoding}
+                            </small>
+                          </span>
+                        </SiteLink>
+                      </TableCell>
+                      <TableCell>
+                        <span className="lb-creator">
+                          <ProviderLogo family={e.row.artifact.model.family} />
+                          {e.row.artifact.model.family}
                         </span>
-                      </SiteLink>
-                    </TableCell>
-                    <TableCell>
-                      <span className="lb-creator">
-                        <ProviderLogo family={e.row.artifact.model.family} />
-                        {e.row.artifact.model.family}
-                      </span>
-                    </TableCell>
-                    {keys.map((k) => (
-                      <TableCell
-                        key={k}
-                        className={k === sort ? "lb-sorted" : ""}
-                        title={specs[k].note}
-                      >
-                        <span>{number(value(e, k), k)}</span>
-                        {coverage(e, k) !== null && value(e, k) !== null && (
-                          <small>
-                            {(coverage(e, k)! * 100).toFixed(0)}% observed
-                          </small>
+                      </TableCell>
+                      {keys.map((k) => (
+                        <TableCell
+                          key={k}
+                          className={k === sort ? "lb-sorted" : ""}
+                          title={specs[k].note}
+                        >
+                          <span>{number(value(e, k), k)}</span>
+                          {coverage(e, k) !== null && value(e, k) !== null && (
+                            <small>
+                              {(coverage(e, k)! * 100).toFixed(0)}% observed
+                            </small>
+                          )}
+                        </TableCell>
+                      ))}
+                      <TableCell>
+                        {
+                          e.row.samples.filter((s) => !s.warmup && s.valid)
+                            .length
+                        }
+                        {e.row.report?.profile?.plan.mode === "count" ? (
+                          ` / ${e.row.report.profile.plan.measuredRequests}`
+                        ) : (
+                          <small>timed run</small>
+                        )}
+                        <small>
+                          {tokenRange(e.row.outputTokens)} output tokens
+                        </small>
+                        {e.row.status !== "complete" && (
+                          <small>{e.row.status}</small>
                         )}
                       </TableCell>
-                    ))}
-                    <TableCell>
-                      {e.row.samples.filter((s) => !s.warmup && s.valid).length}
-                      {e.row.report?.profile?.plan.mode === "count" ? (
-                        ` / ${e.row.report.profile.plan.measuredRequests}`
-                      ) : (
-                        <small>timed run</small>
-                      )}
-                      <small>
-                        {tokenRange(e.row.outputTokens)} output tokens
-                      </small>
-                      {e.row.status !== "complete" && (
-                        <small>{e.row.status}</small>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <SiteLink
-                        className="lb-report-link"
-                        href={href(e.row, back)}
-                        aria-label={`View ${name(e.row)} report`}
-                      >
-                        <ArrowUpRight size={17} />
-                      </SiteLink>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            <div className="lb-table-note">
-              <Info size={14} />
-              <span>
-                {view === "resources"
-                  ? "Memory is browser-process footprint. CPU, GPU time and host power use observed request-window intervals, excluding idle gaps. GPU time is experimental."
-                  : "Request metrics are medians, excluding warmup. Peak memory covers the full session; CPU covers observed request-window intervals."}{" "}
-                Output lengths vary.{" "}
-                <SiteLink href="/methodology/">
-                  Measurement definitions
-                </SiteLink>
-              </span>
-            </div>
-          </Card>
+                      <TableCell>
+                        <SiteLink
+                          className="lb-report-link"
+                          href={href(e.row, back)}
+                          aria-label={`View ${name(e.row)} report`}
+                        >
+                          <ArrowUpRight size={17} />
+                        </SiteLink>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <div className="lb-table-note">
+                <Info size={14} />
+                <span>
+                  {view === "resources"
+                    ? "Memory is browser-process footprint. CPU, GPU time and host power use observed request-window intervals, excluding idle gaps. GPU time is experimental."
+                    : "Request metrics are medians, excluding warmup. Peak memory covers the full session; CPU covers observed request-window intervals."}{" "}
+                  Output lengths vary.{" "}
+                  <SiteLink href="/methodology/">
+                    Measurement definitions
+                  </SiteLink>
+                </span>
+              </div>
+            </Card>
+          </>
         ) : (
           <Card className="lb-empty">
             <Search size={24} />
@@ -720,8 +726,8 @@ export default function LeaderboardPage({ allRows }: { allRows: Row[] }) {
           <div>
             <h2>Performance and footprint</h2>
             <p>
-              Same setup and filters as the table. Select a data point to open
-              its report.
+              Charts use the filtered table results. Select a model to open its
+              report.
             </p>
           </div>
         </div>
@@ -729,7 +735,7 @@ export default function LeaderboardPage({ allRows }: { allRows: Row[] }) {
           <Card className="lb-chart">
             <div className="lb-chart-heading">
               <h3>Speed versus memory</h3>
-              <span>Higher speed · lower footprint</span>
+              <span>Generation speed and browser memory</span>
             </div>
             <p>
               Measured generation speed against sampled peak browser memory.
@@ -891,7 +897,7 @@ export default function LeaderboardPage({ allRows }: { allRows: Row[] }) {
         <div>
           <span className="section-kicker">UNDERSTANDING THE RESULTS</span>
           <h2>Frequently asked questions</h2>
-          <p>The context behind the numbers.</p>
+          <p>Measurement definitions and limits.</p>
           <SiteLink href="/methodology/">
             Read the methodology <ArrowUpRight size={14} />
           </SiteLink>

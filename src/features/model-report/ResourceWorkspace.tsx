@@ -54,7 +54,7 @@ export function ResourceChart({
   window,
   unit,
   percent = false,
-  emptyNote = "Try the full run. A short phase may fall between samples.",
+  emptyNote = "Select Full session to check for readings outside this stage.",
 }: {
   title: string;
   scope: string;
@@ -197,8 +197,8 @@ export function ResourceWorkspace({ report }: { report: Report }) {
         <CardHeader>
           <CardTitle>Timeline not captured</CardTitle>
           <CardDescription>
-            This older report contains snapshots only. They remain available in
-            the original report.
+            This report has no continuous resource samples. Any saved snapshots
+            remain in the downloadable JSON report.
           </CardDescription>
         </CardHeader>
       </Card>
@@ -208,15 +208,15 @@ export function ResourceWorkspace({ report }: { report: Report }) {
       <Card className="v2-phase-control">
         <CardHeader>
           <div className="v2-card-eyebrow">
-            <span>Explore the run</span>
+            <span>Filter by test stage</span>
             <span>{(report.profile.totalMs / 1000).toFixed(2)}s total</span>
           </div>
           <CardTitle>
             <h3>Resource timeline</h3>
           </CardTitle>
           <CardDescription>
-            Follow setup, use and release. These are recorded test stages, not
-            browser states. Every chart shares the same run clock.
+            Select a stage to filter all resource charts. Setup, Use and Release
+            are benchmark stages. Time starts when the browser run begins.
           </CardDescription>
         </CardHeader>
         <CardContent>

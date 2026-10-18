@@ -452,7 +452,7 @@ footer .text-link {
   letter-spacing: 0;
 }
 main [id] {
-  scroll-margin-top: 90px;
+  scroll-margin-top: calc(var(--site-header-offset) + 24px);
 }
 .evidence-grid {
   display: grid;
@@ -1611,4 +1611,12 @@ main [id] {
 [data-slot="table-container"] {
   width: 100%;
   overflow-x: auto;
+}
+
+[data-slot="dialog-overlay"] {
+  position: fixed;
+  inset: 0;
+  background: #11182755;
+  backdrop-filter: blur(3px);
+  z-index: 100;
 }
