@@ -2,7 +2,12 @@ import assert from "node:assert/strict";
 import { readFile, readdir, stat } from "node:fs/promises";
 import { relative, resolve } from "node:path";
 import { startServer } from "../harness/controller/server";
-const { server, origin } = await startServer({ port: 0, siteOnly: true });
+const prefix = process.env.NEXT_PUBLIC_BASE_PATH || "";
+const { server, origin } = await startServer({
+  port: 0,
+  siteOnly: true,
+  basePath: prefix,
+});
 let pages = 0;
 async function verify(directory: string) {
   for (const entry of await readdir(directory)) {
@@ -16,9 +21,12 @@ async function verify(directory: string) {
       "/" +
       relative(resolve("out"), directory).replaceAll("\\", "/") +
       (directory === resolve("out") ? "" : "/");
-    const response = await fetch(origin + url);
+    const response = await fetch(origin + prefix + url);
     assert.equal(response.status, 200, url);
-    const html = await response.text();
+    const html = (await response.text()).replace(
+      /<link\b[^>]*rel="(?:preconnect|dns-prefetch)"[^>]*>/g,
+      "",
+    );
     for (const match of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {
       const asset = match[1].replaceAll("&amp;", "&");
       if (!asset.startsWith("/") || asset.includes("?")) continue;

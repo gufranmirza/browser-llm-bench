@@ -6,7 +6,7 @@ export const basePath = (process.env.NEXT_PUBLIC_BASE_PATH || "").replace(
 export function assetUrl(path: string) {
   return `${basePath}/${path.replace(/^\//, "")}`;
 }
-export function appUrl(value: string) {
+export function routeUrl(value: string) {
   if (/^(?:https?:|mailto:|#(?!\/))/.test(value)) return value;
   let path = value
     .replace(/^#/, "")
@@ -17,9 +17,15 @@ export function appUrl(value: string) {
     (_, id, query) =>
       `/local-report/?id=${encodeURIComponent(id)}${query ? `&${query}` : ""}`,
   );
+  if (basePath && path.startsWith(basePath + "/"))
+    path = path.slice(basePath.length);
   const [pathname, query] = path.split("?");
   const normalized = pathname === "/" ? "/" : `${pathname.replace(/\/$/, "")}/`;
-  return `${normalized.startsWith(basePath + "/") && basePath ? "" : basePath}${normalized}${query !== undefined ? `?${query}` : ""}`;
+  return `${normalized}${query !== undefined ? `?${query}` : ""}`;
+}
+export function appUrl(value: string) {
+  const logical = routeUrl(value);
+  return logical.startsWith("/") ? basePath + logical : logical;
 }
 export function currentUrl() {
   return typeof window === "undefined"

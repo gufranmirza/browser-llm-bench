@@ -5,7 +5,7 @@ import { parseReports } from "../../benchmark/schemas/report";
 import { useReports } from "../../components/layout/AppProvider";
 import { Button } from "../../components/ui/button";
 import { downloadJson } from "../../lib/download";
-import { appUrl } from "../../lib/urls";
+import { routeUrl } from "../../lib/urls";
 import { LocalReports } from "./LocalReports";
 export function LocalResultsView() {
   const { local, localReady, saveLocal, notify, inspect } = useReports();
@@ -68,7 +68,7 @@ export function LocalResultsView() {
         <LocalReports
           reports={local}
           onSelect={inspect}
-          onRun={() => router.push(appUrl("/run/"))}
+          onRun={() => router.push(routeUrl("/run/"))}
         />
       )}
     </>

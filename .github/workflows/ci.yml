@@ -16,7 +16,10 @@ jobs:
           cache: npm
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
+      - run: python3 -m pip install -r harness/requirements-dev.txt
+      - run: python3 -m ruff format --check harness scripts/expand-runner-catalog.py
+      - run: python3 -m ruff check --select E9,F63,F7,F82 harness scripts/expand-runner-catalog.py
       - run: npm ci
       - run: npm run check
       - run: npm run build
@@ -25,11 +28,17 @@ jobs:
         with:
           name: static-site
           path: out
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /browser-llm-bench
+      - run: npm run verify:export
+        env:
+          NEXT_PUBLIC_BASE_PATH: /browser-llm-bench
   macos-collector:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - run: python3 -m unittest discover -s harness/tests

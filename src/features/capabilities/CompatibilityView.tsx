@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useReports } from "../../components/layout/AppProvider";
-import { appUrl } from "../../lib/urls";
+import { routeUrl } from "../../lib/urls";
 import { Compatibility } from "./Compatibility";
 export function CompatibilityView() {
   const { published } = useReports();
@@ -9,7 +9,7 @@ export function CompatibilityView() {
   return (
     <Compatibility
       reports={published}
-      onRun={() => router.push(appUrl("/run/"))}
+      onRun={() => router.push(routeUrl("/run/"))}
     />
   );
 }

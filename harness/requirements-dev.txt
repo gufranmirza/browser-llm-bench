@@ -1,0 +1,2 @@
+# Optional development formatter/linter; collectors have no package dependencies.
+ruff==0.17.1

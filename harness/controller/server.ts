@@ -40,6 +40,7 @@ export async function startServer({
   out = "out",
   presetFile = "harness/presets/comparison.json",
   sessionFile = "artifacts/current-session.json",
+  basePath = "",
 } = {}) {
   const root = process.cwd(),
     output = await realpath(resolve(root, out)),
@@ -217,6 +218,11 @@ export async function startServer({
       }
       if (req.method !== "GET" && req.method !== "HEAD")
         return send(405, { error: "Static site is read-only" });
+      if (basePath) {
+        if (pathname !== basePath && !pathname.startsWith(basePath + "/"))
+          return send(404, { error: "Outside configured site base path" });
+        pathname = pathname.slice(basePath.length) || "/";
+      }
       let file = resolve(output, "." + pathname);
       if (!isWithin(output, file)) return send(403, { error: "Invalid path" });
       let code = 200;
@@ -266,6 +272,7 @@ if (
     out: option("--out", "out"),
     presetFile: option("--preset", "harness/presets/comparison.json"),
     sessionFile: option("--session", "artifacts/current-session.json"),
+    basePath: option("--base-path", ""),
   }).catch((e) => {
     console.error(e);
     process.exitCode = 1;

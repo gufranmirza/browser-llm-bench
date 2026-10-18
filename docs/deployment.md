@@ -8,6 +8,8 @@ For a repository subpath such as GitHub Pages:
 NEXT_PUBLIC_BASE_PATH=/browser-llm-bench npm run build
 ```
 
+Verify that export with `NEXT_PUBLIC_BASE_PATH=/browser-llm-bench npm run verify:export`, or preview using `npm run preview -- --base-path /browser-llm-bench`.
+
 Set the base path at build time. Internal links, provider logos, report requests and worker URLs use the same prefix. Normal custom-domain hosting uses an empty base path.
 
 The CI workflow validates and exports the site. The separate Pages workflow is manually dispatched after GitHub Pages is configured to use GitHub Actions; it does not publish automatically merely because source code is pushed.

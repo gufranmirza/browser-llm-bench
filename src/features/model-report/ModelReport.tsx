@@ -356,7 +356,7 @@ export default function ModelReport({
             : "Synthetic data"}
         </span>
         <SiteLink href="/local-results/">
-          Browse saved reports
+          Your local results
           <ArrowUpRight size={13} />
         </SiteLink>
       </div>
