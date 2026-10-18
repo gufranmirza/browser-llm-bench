@@ -1,0 +1,5 @@
+Brand marks sourced from https://github.com/lobehub/lobe-icons/tree/master/packages/static-svg/icons (MIT). Logos remain trademarks of their owners. Lucide is used for interface actions, not provider branding.
+
+Creator assets aa-alibaba.svg, aa-meta.svg, aa-mistral.svg, aa-google.svg copied from https://artificialanalysis.ai/img/logos/{creator}.svg on 2026-10-18. Brand marks identify their respective owners; no endorsement implied. Qwen, Gemma, and Hugging Face family marks use the Lobe Icons MIT distribution above.
+
+2026-10-18 runner expansion: Microsoft, IBM, Cohere, NVIDIA, Liquid, TII, AI21 and Aya from @lobehub/icons-static-svg 1.95.1 (MIT). Additional provider marks observed in the Artificial Analysis model table: https://artificialanalysis.ai/img/logos/ifm.svg, https://artificialanalysis.ai/img/logos/ai9stars.svg, https://artificialanalysis.ai/img/logos/openbmb.svg, https://artificialanalysis.ai/img/logos/inclusionai.jpg, https://artificialanalysis.ai/img/logos/nanbeige.png, https://artificialanalysis.ai/img/logos/lg.png, https://artificialanalysis.ai/img/logos/ai2.svg. Stored locally to avoid third-party image requests.

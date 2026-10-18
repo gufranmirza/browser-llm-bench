@@ -1,0 +1,8 @@
+node_modules
+.next
+out
+artifacts
+public/reports
+public/benchmark-worker
+catalog/research
+tests/fixtures/*.json

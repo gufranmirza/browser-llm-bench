@@ -1,0 +1,236 @@
+/* Runner uses shared controls with a compact, responsive configuration layout. */
+.runner-grid {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: start;
+}
+.run-config label {
+  font-size: 12px;
+  color: var(--text, #293c32);
+}
+.run-config .ui-input {
+  min-width: 0;
+  min-height: 38px;
+  font: inherit;
+  border-radius: 6px;
+}
+.run-config .ui-input:focus-visible {
+  outline: 2px solid #527b68;
+  outline-offset: 2px;
+}
+.runner-local-note {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--muted);
+  margin: 0;
+}
+.runner-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.runner-fields:disabled {
+  opacity: 0.6;
+}
+.runner-field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.runner-field-grid label {
+  margin: 0;
+  min-width: 0;
+}
+.runner-field-grid .select-trigger {
+  width: 100%;
+  min-width: 0;
+  height: 38px;
+}
+.runner-artifact {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 24px 0 16px;
+}
+.runner-artifact strong {
+  font-size: 15px;
+}
+.runner-artifact span:not(.lb-provider-logo) {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+.runner-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 16px 0;
+  margin: 0;
+  border-top: 1px solid #e3e8e4;
+  border-bottom: 1px solid #e3e8e4;
+}
+.runner-facts dt {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+.runner-facts dd {
+  font-size: 15px;
+  font-weight: 550;
+  margin: 0;
+}
+.run-config .capability {
+  margin-top: 18px;
+  background: #f2f5f3;
+}
+.runner-schedule {
+  background: #f2f5f3;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 20px 0 8px;
+}
+.runner-schedule strong {
+  font-size: 13px;
+  line-height: 1.8;
+}
+.runner-schedule p,
+.runner-unavailable p {
+  font-size: 12px;
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+.runner-options .shadcn-accordion-trigger {
+  font-size: 14px;
+}
+.runner-options .shadcn-accordion-body {
+  padding: 4px 2px 18px;
+}
+.runner-options .profiling-switch {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.runner-options .profiling-switch input {
+  width: 16px;
+  height: 16px;
+}
+.runner-options .field-note {
+  font-size: 12px;
+}
+.runner-prompt {
+  white-space: pre-wrap;
+  max-height: 240px;
+  overflow: auto;
+  background: #f5f6f5;
+  padding: 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.runner-pin {
+  font-size: 12px;
+  line-height: 1.7;
+}
+.runner-pin dt {
+  margin-top: 12px;
+  color: var(--muted);
+}
+.runner-pin dd {
+  margin: 3px 0;
+  overflow-wrap: anywhere;
+}
+.runner-start {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 24px;
+}
+.runner-start small {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.6;
+  flex: 1;
+}
+.runner-start button {
+  flex-shrink: 0;
+}
+.runner-unavailable {
+  background: #f8f6ef;
+  padding: 18px;
+  border-radius: 8px;
+  margin-top: 20px;
+  overflow-wrap: anywhere;
+}
+.runner-unavailable h3 {
+  font-size: 15px;
+  margin: 0;
+}
+.runner-unavailable .text-link {
+  display: inline-flex;
+  margin-top: 16px;
+  gap: 5px;
+  align-items: center;
+}
+.runner-result-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+@media (max-width: 900px) {
+  .runner-grid {
+    grid-template-columns: 1fr;
+  }
+  .run-config,
+  .run-output {
+    padding: 22px;
+  }
+}
+@media (max-width: 520px) {
+  .runner-field-grid {
+    grid-template-columns: 1fr;
+  }
+  .runner-start {
+    flex-direction: column;
+  }
+  .runner-facts {
+    gap: 12px;
+  }
+}
+.runner-grid.runner-layout {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: start;
+}
+.run-config .runner-select-field {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  gap: 9px;
+  margin-top: 22px;
+  color: var(--text, #293c32);
+  min-width: 0;
+}
+.run-config .runner-select-field > .select-trigger {
+  width: 100%;
+  height: 38px;
+  min-width: 0;
+}
+.run-config .runner-field-grid {
+  gap: 16px;
+}
+.run-config .runner-field-grid label,
+.run-config .runner-field-grid .runner-select-field {
+  margin: 0;
+  font-size: 12px;
+}
+@media (min-width: 901px) {
+  .runner-layout .run-output {
+    position: sticky;
+    top: calc(var(--site-header-offset, 79px) + 20px);
+  }
+}
+@media (max-width: 900px) {
+  .runner-grid.runner-layout {
+    grid-template-columns: 1fr;
+  }
+}

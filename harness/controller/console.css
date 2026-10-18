@@ -1,0 +1,43 @@
+.harness-console {
+  max-width: 1000px;
+  margin: 48px auto;
+  padding: 0 24px;
+}
+.harness-console h1 {
+  font-size: 36px;
+}
+.harness-console p {
+  line-height: 1.7;
+}
+.harness-console .panel {
+  padding: 24px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  margin: 24px 0;
+}
+.harness-console button {
+  padding: 10px 16px;
+  border: 1px solid #bbc7bf;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+.harness-console button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.harness-console pre {
+  white-space: pre-wrap;
+  max-height: 240px;
+  overflow: auto;
+}
+.harness-console progress {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+}
+.harness-console li {
+  margin: 12px 0;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}

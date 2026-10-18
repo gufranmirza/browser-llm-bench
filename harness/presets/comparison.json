@@ -1,0 +1,31 @@
+{
+  "name": "Comparison \u00b7 60 requests per model",
+  "models": [
+    "Qwen3-0.6B-q4f16_1-MLC",
+    "Qwen3-4B-q4f16_1-MLC",
+    "Qwen2.5-7B-Instruct-q4f16_1-MLC",
+    "Qwen2.5-0.5B-Instruct-q4f16_1-MLC",
+    "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",
+    "Llama-3.2-1B-Instruct-q4f16_1-MLC",
+    "Qwen2.5-3B-Instruct-q4f16_1-MLC",
+    "Qwen3-1.7B-q4f16_1-MLC",
+    "Mistral-7B-Instruct-v0.3-q4f16_1-MLC",
+    "Mistral-7B-Instruct-v0.2-q4f16_1-MLC"
+  ],
+  "workload": "repeat",
+  "mode": "session-count",
+  "deviceLabel": "Dedicated Chrome \u00b7 set your device label",
+  "profiling": true,
+  "requirePower": true,
+  "settings": {
+    "temperature": 0,
+    "topP": 1,
+    "seed": 42,
+    "maxTokens": 64,
+    "contextWindow": 4096,
+    "warmups": 1,
+    "warmupTokens": 16,
+    "requestLimitMs": 60000,
+    "thinking": false
+  }
+}

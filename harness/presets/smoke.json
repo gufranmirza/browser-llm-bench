@@ -1,0 +1,22 @@
+{
+  "name": "Harness smoke \u00b7 3 requests",
+  "models": [
+    "SmolLM2-135M-Instruct-q0f16-MLC"
+  ],
+  "workload": "repeat",
+  "mode": "smoke",
+  "deviceLabel": "Dedicated Chrome \u00b7 set your device label",
+  "profiling": true,
+  "requirePower": false,
+  "settings": {
+    "temperature": 0,
+    "topP": 1,
+    "seed": 42,
+    "maxTokens": 16,
+    "contextWindow": 4096,
+    "warmups": 1,
+    "warmupTokens": 16,
+    "requestLimitMs": 60000,
+    "thinking": false
+  }
+}

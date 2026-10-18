@@ -1,0 +1,15 @@
+{
+  "entry": [
+    "src/app/**/{page,layout,not-found}.tsx",
+    "src/benchmark/worker/benchmark.worker.ts",
+    "scripts/*.{ts,mjs}",
+    "tests/{unit,integration}/**/*.test.ts",
+    "harness/controller/console.tsx"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "harness/**/*.{ts,tsx}",
+    "scripts/*.{ts,mjs}",
+    "tests/**/*.ts"
+  ]
+}

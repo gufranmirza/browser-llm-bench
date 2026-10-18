@@ -1,0 +1,8 @@
+{
+  "manifestUrl": "https://huggingface.co/mlc-ai/SmolLM2-135M-Instruct-q0f16-MLC/resolve/06fc409f2212adff29d93cbc742c1d6957302df5/ndarray-cache.json",
+  "manifestSha256": "bb1307859901ebe833a1ad9f25b5a2babed8bbcfe8ea1d7e5b64db52e1c17149",
+  "weightShardBytes": 269030016,
+  "shards": 8,
+  "nominalParameters": 135000000,
+  "theoreticalFP16Bytes": 270000000
+}
