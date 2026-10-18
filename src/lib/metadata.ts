@@ -3,10 +3,10 @@ import { brand } from "./brand";
 
 /** The deployment root, including any repository subpath, is set at build time. */
 export const siteUrl = new URL(
-  (
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    "https://gufranmirza.github.io/browser-llm-bench"
-  ).replace(/\/$/, "") + "/",
+  (process.env.NEXT_PUBLIC_SITE_URL || "https://browserllm.dev").replace(
+    /\/$/,
+    "",
+  ) + "/",
 );
 if (
   !/^https?:$/.test(siteUrl.protocol) ||

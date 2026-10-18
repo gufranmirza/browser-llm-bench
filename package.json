@@ -22,7 +22,8 @@
     "check:unused": "knip --include files,dependencies,unlisted,unresolved --no-progress",
     "check": "npm run typecheck && npm test && npm run test:harness && npm run test:integration && npm run check:unused && npm run format:check",
     "build:brand": "node scripts/build-brand-assets.mjs",
-    "build:seo": "tsx scripts/build-seo.ts"
+    "build:seo": "tsx scripts/build-seo.ts",
+    "deploy:cloudflare": "wrangler deploy"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "5.3.0",
@@ -52,6 +53,7 @@
     "prettier": "3.8.3",
     "sharp": "0.35.5",
     "tsx": "^4.20.0",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "wrangler": "4.151.1"
   }
 }

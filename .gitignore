@@ -13,3 +13,7 @@ __pycache__/
 # Generated crawlable guides and social images (rebuilt from source and public reports).
 public/seo/
 public/llms.txt
+
+# Local Cloudflare preview state and secrets.
+.wrangler/
+.dev.vars*
