@@ -716,10 +716,7 @@ export default function Runner({
                 <Button
                   variant="outline"
                   onClick={() =>
-                    downloadJson(
-                      last,
-                      `browser-inference-bench-${last.id}.json`,
-                    )
+                    downloadJson(last, `browser-llm-bench-${last.id}.json`)
                   }
                 >
                   Download report <ArrowUpRight size={15} />

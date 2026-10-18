@@ -5,10 +5,12 @@
 For a repository subpath such as GitHub Pages:
 
 ```sh
-NEXT_PUBLIC_BASE_PATH=/browser-llm-bench npm run build
+NEXT_PUBLIC_SITE_URL=https://gufranmirza.github.io/browser-llm-bench NEXT_PUBLIC_BASE_PATH=/browser-llm-bench npm run build
 ```
 
 Verify that export with `NEXT_PUBLIC_BASE_PATH=/browser-llm-bench npm run verify:export`, or preview using `npm run preview -- --base-path /browser-llm-bench`.
+
+Set `NEXT_PUBLIC_SITE_URL` to the full public deployment root at build time. It controls canonical URLs, Open Graph/Twitter images, the sitemap and WebSite structured data; it defaults to this repository’s GitHub Pages URL. For a custom domain, set its HTTPS URL and leave `NEXT_PUBLIC_BASE_PATH` empty. Private local results and reports carry `noindex` and are excluded from the sitemap.
 
 Set the base path at build time. Internal links, provider logos, report requests and worker URLs use the same prefix. Normal custom-domain hosting uses an empty base path.
 

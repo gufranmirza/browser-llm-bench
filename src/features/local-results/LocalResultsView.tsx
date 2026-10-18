@@ -55,7 +55,7 @@ export function LocalResultsView() {
             variant="outline"
             disabled={!local.length}
             onClick={() =>
-              downloadJson(local, "browser-inference-bench-reports.json")
+              downloadJson(local, "browser-llm-bench-reports.json")
             }
           >
             Export all

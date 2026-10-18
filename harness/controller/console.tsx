@@ -1,3 +1,4 @@
+import { brand } from "../../src/lib/brand";
 import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { planFor } from "../../src/benchmark/protocol/schedule";
@@ -106,8 +107,8 @@ function Console() {
   }, [running, status, index, saving]);
   return (
     <main className="harness-console">
-      <p className="section-kicker">LOCAL NATIVE HARNESS</p>
-      <h1>{status?.preset.name ?? "Browser benchmark"}</h1>
+      <p className="section-kicker">{brand.name} / Local native harness</p>
+      <h1>{status?.preset.name ?? brand.name}</h1>
       <p>
         This console exists only on the loopback harness server. Runs save to
         artifacts; publishing requires a separate command.

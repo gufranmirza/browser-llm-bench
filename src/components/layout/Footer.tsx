@@ -1,10 +1,13 @@
+import { BrandMark } from "../BrandMark";
+import { brand } from "../../lib/brand";
 import { ArrowUpRight } from "lucide-react";
 import { SiteLink } from "../SiteLink";
 export function Footer() {
   return (
     <footer>
       <SiteLink className="footer-brand" href="/">
-        Browser Inference Bench
+        <BrandMark size={24} />
+        <span>{brand.name}</span>
       </SiteLink>
       <span>Performance. Compatibility. Reliability.</span>
       <SiteLink className="text-link" href="/methodology/">

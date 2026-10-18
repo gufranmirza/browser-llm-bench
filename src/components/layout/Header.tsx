@@ -1,4 +1,6 @@
 "use client";
+import { BrandMark } from "../BrandMark";
+import { brand } from "../../lib/brand";
 import { ArrowUpRight } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { SiteLink } from "../SiteLink";
@@ -11,9 +13,10 @@ export function Header() {
         <SiteLink
           className="brand index-brand"
           href="/"
-          aria-label="Browser Inference Bench home"
+          aria-label={`${brand.name} home`}
         >
-          <span>Browser Inference Bench</span>
+          <BrandMark />
+          <span>{brand.name}</span>
         </SiteLink>
         <nav aria-label="Main navigation">
           {[

@@ -103,9 +103,7 @@ export function ReportDetail({ report: r }: { report: Report }) {
           <li key={i}>{d}</li>
         ))}
       </ul>
-      <Button
-        onClick={() => downloadJson(r, `browser-inference-bench-${r.id}.json`)}
-      >
+      <Button onClick={() => downloadJson(r, `browser-llm-bench-${r.id}.json`)}>
         <Download size={15} />
         Export complete JSON
       </Button>

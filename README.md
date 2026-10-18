@@ -1,4 +1,4 @@
-# Browser LLM Bench
+# <img src="public/brand/logo.svg" alt="" width="32" height="32"> Browser LLM Bench
 
 A static Next.js site for comparing measured browser LLM performance and resources, with a local macOS harness for dedicated Chrome captures.
 

@@ -14,6 +14,8 @@ const types: Record<string, string> = {
   ".css": "text/css; charset=utf-8",
   ".json": "application/json",
   ".svg": "image/svg+xml",
+  ".ico": "image/x-icon",
+  ".xml": "application/xml; charset=utf-8",
   ".png": "image/png",
   ".jpg": "image/jpeg",
   ".woff2": "font/woff2",
@@ -156,7 +158,7 @@ export async function startServer({
             "Cache-Control": "no-store",
           });
           res.end(
-            '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Local benchmark harness</title><link rel="stylesheet" href="/__harness/console.css"></head><body><div id="harness-root"></div><script type="module" src="/__harness/console.js"></script></body></html>',
+            '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Browser LLM Bench · Local harness</title><link rel="stylesheet" href="/__harness/console.css"></head><body><div id="harness-root"></div><script type="module" src="/__harness/console.js"></script></body></html>',
           );
           return;
         }
