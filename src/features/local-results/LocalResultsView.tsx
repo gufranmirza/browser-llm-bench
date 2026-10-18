@@ -1,16 +1,13 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { parseReports } from "../../benchmark/schemas/report";
 import { useReports } from "../../components/layout/AppProvider";
 import { Button } from "../../components/ui/button";
 import { downloadJson } from "../../lib/download";
-import { routeUrl } from "../../lib/urls";
 import { LocalReports } from "./LocalReports";
 export function LocalResultsView() {
-  const { local, localReady, saveLocal, notify, inspect } = useReports();
+  const { local, localReady, saveLocal, notify } = useReports();
   const file = useRef<HTMLInputElement>(null);
-  const router = useRouter();
   async function importFile(f?: File) {
     if (!f) return;
     try {
@@ -38,10 +35,10 @@ export function LocalResultsView() {
         accept="application/json,.json"
         onChange={(e) => void importFile(e.target.files?.[0])}
       />
-      <div className="section-kicker">YOUR LOCAL EVIDENCE</div>
+      <div className="section-kicker">LOCAL REPORTS</div>
       <div className="page-heading">
         <div>
-          <h1>Your measurement log.</h1>
+          <h1>Your benchmark reports</h1>
           <p>
             Private results saved in this browser. They never change the public
             leaderboard.
@@ -58,18 +55,14 @@ export function LocalResultsView() {
               downloadJson(local, "browser-llm-bench-reports.json")
             }
           >
-            Export all
+            Download all
           </Button>
         </div>
       </div>
       {!localReady ? (
         <p role="status">Loading local measurements…</p>
       ) : (
-        <LocalReports
-          reports={local}
-          onSelect={inspect}
-          onRun={() => router.push(routeUrl("/run/"))}
-        />
+        <LocalReports reports={local} />
       )}
     </>
   );

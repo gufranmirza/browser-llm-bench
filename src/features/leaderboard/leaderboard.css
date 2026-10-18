@@ -867,10 +867,10 @@ main:has(.lb-page) {
   align-items: start;
 }
 .lb-page .lb-intro h1 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-sans);
   font-size: 40px;
-  font-weight: 400;
-  letter-spacing: -1.1px;
+  font-weight: 600;
+  letter-spacing: -1.2px;
   line-height: 1.08;
   max-width: 630px;
   margin: 0;
@@ -989,6 +989,7 @@ main:has(.lb-page) {
     font-size: 34px;
   }
   .lb-insights {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
 }

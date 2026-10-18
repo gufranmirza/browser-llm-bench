@@ -55,17 +55,16 @@ export function RequestExplorer({ samples }: { samples: Sample[] }) {
       <Card className="v2-request-explorer">
         <CardHeader>
           <div className="v2-card-eyebrow">
-            <span>Every request, in one place</span>
+            <span>Request samples</span>
             <span>
               {measured.length} measured · {warmups.length} warmup
             </span>
           </div>
           <CardTitle>
-            <h3>Inspect the actual workload</h3>
+            <h3>Prompts and responses</h3>
           </CardTitle>
           <CardDescription>
-            Scroll through the requests. Select a row to read its exact prompt
-            and output.
+            Select a request to read its prompt and response.
           </CardDescription>
         </CardHeader>
         <CardContent>

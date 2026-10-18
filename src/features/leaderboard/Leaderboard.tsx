@@ -394,7 +394,7 @@ export default function LeaderboardPage({ allRows }: { allRows: Row[] }) {
       <section className="lb-intro">
         <div className="lb-intro-top">
           <div className="lb-intro-title">
-            <h1>Browser Model Leaderboard — comparison of local AI models</h1>
+            <h1>Browser LLM leaderboard</h1>
             <div className="lb-intro-actions">
               <SiteLink className="lb-intro-primary" href="/methodology/">
                 Methodology <ArrowUpRight size={14} />
@@ -404,7 +404,7 @@ export default function LeaderboardPage({ allRows }: { allRows: Row[] }) {
                 onClick={() =>
                   downloadJson(
                     entries.map((e) => e.row.report),
-                    "browser-bench-results.json",
+                    "browser-llm-bench-results.json",
                   )
                 }
               >
@@ -521,7 +521,7 @@ export default function LeaderboardPage({ allRows }: { allRows: Row[] }) {
             onClick={() =>
               downloadJson(
                 entries.map((e) => e.row.report),
-                "browser-bench-results.json",
+                "browser-llm-bench-results.json",
               )
             }
           >

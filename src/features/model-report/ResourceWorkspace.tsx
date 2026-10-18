@@ -212,7 +212,7 @@ export function ResourceWorkspace({ report }: { report: Report }) {
             <span>{(report.profile.totalMs / 1000).toFixed(2)}s total</span>
           </div>
           <CardTitle>
-            <h3>One timeline. Every resource.</h3>
+            <h3>Resource timeline</h3>
           </CardTitle>
           <CardDescription>
             Follow setup, use and release. These are recorded test stages, not
@@ -470,7 +470,7 @@ export function ResourceWorkspace({ report }: { report: Report }) {
                   <span>Metal System Trace</span>
                 </div>
                 <CardTitle>
-                  <h3>How close is the Chrome counter?</h3>
+                  <h3>Chrome counter validation</h3>
                 </CardTitle>
                 <CardDescription>
                   Counter {(validation.counterMs / 1000).toFixed(2)}s · trace

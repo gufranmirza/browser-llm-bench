@@ -18,11 +18,11 @@ export function Compatibility({
   const local = reports[0];
   return (
     <>
-      <div className="section-kicker">CAPABILITY IS NOT A GUARANTEE</div>
+      <div className="section-kicker">RUNTIME SUPPORT</div>
       <div className="page-heading">
         <div>
-          <h1>Will it run?</h1>
-          <p>Keep unsupported, untested and failed configurations distinct.</p>
+          <h1>Browser compatibility</h1>
+          <p>Implemented runtimes and captured device support.</p>
         </div>
         <Button onClick={onRun}>
           Test this browser <ArrowUpRight size={15} />
@@ -101,7 +101,7 @@ export function Compatibility({
           ],
           [
             "Unsupported",
-            "A required capability is absent. For this artifact, that includes WebGPU and shader-f16.",
+            "A required capability is missing. Requirements vary by model and encoding.",
           ],
           [
             "Untested",
@@ -119,7 +119,7 @@ export function Compatibility({
         ))}
       </div>
       <section className="panel prompt-panel">
-        <h2>The environment is part of the result.</h2>
+        <h2>Compare matching environments</h2>
         <p>
           Compare exact model revision, quantization, runtime version, browser
           version, OS, device and protocol together. A successful run on one

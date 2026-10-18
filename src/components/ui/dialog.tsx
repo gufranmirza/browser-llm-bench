@@ -1,9 +1,7 @@
 "use client";
 // shadcn/ui (MIT), adapted to shared slot-based CSS. See licenses/shadcn-ui-MIT.txt.
-"use client";
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { clsx as cn } from "clsx";
 import { XIcon } from "lucide-react";
 import * as React from "react";
 
@@ -40,7 +38,7 @@ function DialogOverlay({
   return (
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
-      className={cn("", className)}
+      className={className}
       {...props}
     />
   );
@@ -59,12 +57,12 @@ function DialogContent({
       <DialogOverlay />
       <DialogPrimitive.Content
         data-slot="dialog-content"
-        className={cn("", className)}
+        className={className}
         {...props}
       >
         {children}
         {showCloseButton && (
-          <DialogPrimitive.Close data-slot="dialog-close" className="">
+          <DialogPrimitive.Close data-slot="dialog-close">
             <XIcon />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
@@ -75,13 +73,7 @@ function DialogContent({
 }
 
 function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="dialog-header"
-      className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
-      {...props}
-    />
-  );
+  return <div data-slot="dialog-header" className={className} {...props} />;
 }
 
 function DialogFooter({
@@ -93,7 +85,7 @@ function DialogFooter({
   showCloseButton?: boolean;
 }) {
   return (
-    <div data-slot="dialog-footer" className={cn("", className)} {...props}>
+    <div data-slot="dialog-footer" className={className} {...props}>
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close asChild>
@@ -111,7 +103,7 @@ function DialogTitle({
   return (
     <DialogPrimitive.Title
       data-slot="dialog-title"
-      className={cn("text-lg leading-none font-semibold", className)}
+      className={className}
       {...props}
     />
   );
@@ -124,7 +116,7 @@ function DialogDescription({
   return (
     <DialogPrimitive.Description
       data-slot="dialog-description"
-      className={cn("text-sm text-muted-foreground", className)}
+      className={className}
       {...props}
     />
   );

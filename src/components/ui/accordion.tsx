@@ -1,6 +1,5 @@
 "use client";
 // Adapted from shadcn/ui Accordion (MIT), styled with local CSS.
-"use client";
 
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { clsx as cn } from "clsx";

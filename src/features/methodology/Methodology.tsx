@@ -34,7 +34,7 @@ export function Methodology({ section }: { section: string | null }) {
       </div>
       <div className="page-heading">
         <div>
-          <h1>How we measure browser inference.</h1>
+          <h1>How we measure browser inference</h1>
           <p>Performance, resource usage and scoring definitions.</p>
         </div>
         <span className="badge">
@@ -52,7 +52,7 @@ export function Methodology({ section }: { section: string | null }) {
         <article>
           <section id="scope">
             <span className="section-number">01 /</span>
-            <h2>Measured on an exact configuration.</h2>
+            <h2>Measurement scope</h2>
             <p>
               Inference runs locally in a dedicated Web Worker using WebLLM and
               WebGPU. Model files come from external hosts; prompts and outputs
@@ -77,7 +77,7 @@ export function Methodology({ section }: { section: string | null }) {
           </section>
           <section id="protocol">
             <span className="section-number">02 /</span>
-            <h2>One model. Three request windows.</h2>
+            <h2>Run protocol</h2>
             <div className="panel table-wrap">
               <table>
                 <thead>
@@ -162,7 +162,7 @@ export function Methodology({ section }: { section: string | null }) {
           </section>
           <section id="timing">
             <span className="section-number">03 /</span>
-            <h2>Performance: definitions and formulas.</h2>
+            <h2>Performance definitions and formulas</h2>
             <p>
               For request <code>i</code>, <code>startᵢ</code> is measured after
               chat reset, immediately before the streaming completion call;{" "}
@@ -233,7 +233,7 @@ export function Methodology({ section }: { section: string | null }) {
           </section>
           <section id="resources">
             <span className="section-number">04 /</span>
-            <h2>Resource usage: scope and calculations.</h2>
+            <h2>Resource scope and calculations</h2>
             <p>
               Every resource needs a scope, time window and coverage.
               Browser-only reports expose less than reports paired with the
@@ -359,7 +359,7 @@ export function Methodology({ section }: { section: string | null }) {
           </section>
           <section id="scoring">
             <span className="section-number">05 /</span>
-            <h2>Browser suitability: planned, not yet scored.</h2>
+            <h2>Planned browser suitability score</h2>
             <p>
               <strong>
                 The current release publishes measurements, not a suitability
@@ -413,7 +413,7 @@ export function Methodology({ section }: { section: string | null }) {
           </section>
           <section id="evidence">
             <span className="section-number">06 /</span>
-            <h2>Rules for fair comparison.</h2>
+            <h2>Comparison rules</h2>
             <p>
               Compare matching protocols, hardware, browser/runtime versions,
               context, cache, precision, thinking mode and visibility

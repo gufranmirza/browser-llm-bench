@@ -3,7 +3,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { clsx } from "clsx";
 import * as React from "react";
-// shadcn/ui Button composition, styled with the app's editorial design tokens.
+// shadcn/ui Button composition, styled with the app's shared design tokens.
 const buttonVariants = cva("button", {
   variants: {
     variant: {

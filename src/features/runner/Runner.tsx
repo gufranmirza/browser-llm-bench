@@ -183,16 +183,16 @@ export default function Runner({
   };
   return (
     <>
-      <div className="section-kicker">YOUR DEVICE, YOUR EVIDENCE</div>
+      <div className="section-kicker">LOCAL BROWSER BENCHMARK</div>
       <div className="page-heading">
         <div>
-          <h1>Measure the browser.</h1>
+          <h1>Run a browser benchmark</h1>
           <p>Choose a model, its weight format and a reproducible workload.</p>
         </div>
         <div className="toolbar-actions">
           <Button asChild variant="outline">
             <SiteLink href="/local-results/">
-              Local results <ArrowUpRight size={15} />
+              Local reports <ArrowUpRight size={15} />
             </SiteLink>
           </Button>
           <span className="badge green">

@@ -270,7 +270,7 @@ export default function ModelReport({
       <div className="v2-topline">
         <SiteLink href={back}>
           <ArrowLeft size={14} />
-          {localReportId ? "Back to local results" : "Back to leaderboard"}
+          {localReportId ? "Back to local reports" : "Back to leaderboard"}
         </SiteLink>
       </div>
       <div className="v2-hero">
@@ -280,7 +280,7 @@ export default function ModelReport({
             <ProviderLogo family={model.family} model={model.name} />
             {model.name}
           </h1>
-          <p>A closer look at how this model runs in the browser.</p>
+          <p>Measured browser performance and resource usage.</p>
           <div className="v2-hero-meta">
             <span>{parameterLabel(model.parameters)} parameters</span>
             <span>{precision[artifact.encoding]}</span>
@@ -295,11 +295,11 @@ export default function ModelReport({
             <Button
               variant="outline"
               onClick={() =>
-                downloadJson(report, `browser-bench-${report.id}.json`)
+                downloadJson(report, `browser-llm-bench-${report.id}.json`)
               }
             >
               <Download size={15} />
-              Export report
+              Download JSON
             </Button>
           )}
           {artifact.runnable && (
@@ -355,10 +355,12 @@ export default function ModelReport({
               })
             : "Synthetic data"}
         </span>
-        <SiteLink href="/local-results/">
-          Your local results
-          <ArrowUpRight size={13} />
-        </SiteLink>
+        {localReportId && (
+          <SiteLink href="/local-results/">
+            Local reports
+            <ArrowUpRight size={13} />
+          </SiteLink>
+        )}
       </div>
       <div className="v2-config-summary">
         <Card>
@@ -373,7 +375,7 @@ export default function ModelReport({
             <CardDescription>
               {report
                 ? `${report.executionBackend.toUpperCase()} · dedicated worker`
-                : "Selected evidence configuration"}
+                : "Selected configuration"}
             </CardDescription>
           </CardHeader>
         </Card>
@@ -436,7 +438,9 @@ export default function ModelReport({
         {report
           ? report.nativeTrace?.gpuValidation
             ? "Diagnostic capture with Metal System Trace active. Timings include profiler overhead and are not a performance baseline. Warmup is excluded."
-            : "One saved run. Performance summaries exclude warmup; imported evidence is user supplied."
+            : localReportId
+              ? "Private browser report. Performance summaries exclude warmup."
+              : "Published run. Performance summaries exclude warmup."
           : source === "illustrative"
             ? "Illustrative data only. These values demonstrate the interface, not measured model performance."
             : "This selection has no saved report. Missing measurements stay unavailable."}
@@ -459,7 +463,7 @@ export default function ModelReport({
             <SectionTitle
               number="01"
               title="Performance"
-              description="From loading the engine to finishing a response."
+              description="Startup, latency, generation speed and response time."
             />
             <PerformanceWorkspace
               key={report?.id ?? row?.id}
@@ -529,7 +533,7 @@ export default function ModelReport({
             <SectionTitle
               number="02"
               title="Resources over time"
-              description="Separate what the browser uses from what the whole machine is doing."
+              description="Browser process measurements and whole-machine activity, labeled by scope."
             />
             {report ? (
               <ResourceWorkspace key={report.id} report={report} />
@@ -549,7 +553,7 @@ export default function ModelReport({
             <SectionTitle
               number="03"
               title="Requests & repeated use"
-              description="The distribution behind the headline. Every prompt and output stays inspectable."
+              description="Request outcomes, prompts, responses and run diagnostics."
             />
             <div className="v2-request-summary">
               <div>
@@ -856,11 +860,11 @@ export default function ModelReport({
             <Card className="v2-evidence-card">
               <CardHeader>
                 <CardTitle>
-                  <h3>Keep the evidence close</h3>
+                  <h3>Report files</h3>
                 </CardTitle>
                 <CardDescription>
-                  This view reuses the original saved report. No measurements
-                  have been changed.
+                  Inspect saved settings and samples, or download the JSON
+                  report.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -872,19 +876,19 @@ export default function ModelReport({
                         onClick={() => onReport(report)}
                       >
                         <FileText size={14} />
-                        Inspect original report
+                        Inspect raw report
                       </Button>
                       <Button
                         variant="outline"
                         onClick={() =>
                           downloadJson(
                             report,
-                            `browser-bench-${report.id}.json`,
+                            `browser-llm-bench-${report.id}.json`,
                           )
                         }
                       >
                         <Download size={14} />
-                        Export JSON
+                        Download JSON
                       </Button>
                     </>
                   )}

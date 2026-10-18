@@ -2,13 +2,28 @@
 import { BrandMark } from "../BrandMark";
 import { brand } from "../../lib/brand";
 import { ArrowUpRight } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { SiteLink } from "../SiteLink";
 import { Button } from "../ui/button";
 export function Header() {
   const path = usePathname();
+  const header = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const element = header.current;
+    if (!element) return;
+    const measure = () =>
+      document.documentElement.style.setProperty(
+        "--site-header-offset",
+        `${element.getBoundingClientRect().height}px`,
+      );
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
   return (
-    <header>
+    <header ref={header}>
       <div className="header-inner">
         <SiteLink
           className="brand index-brand"

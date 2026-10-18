@@ -1,10 +1,7 @@
 "use client";
 // shadcn/ui (MIT), adapted to shared slot-based CSS. See licenses/shadcn-ui-MIT.txt.
-"use client";
 
 import * as TabsPrimitive from "@radix-ui/react-tabs";
-import { cva, type VariantProps } from "class-variance-authority";
-import { clsx as cn } from "clsx";
 import * as React from "react";
 
 function Tabs({
@@ -17,35 +14,24 @@ function Tabs({
       data-slot="tabs"
       data-orientation={orientation}
       orientation={orientation}
-      className={cn("", className)}
+      className={className}
       {...props}
     />
   );
 }
 
-const tabsListVariants = cva("", {
-  variants: {
-    variant: {
-      default: "bg-muted",
-      line: "gap-1 bg-transparent",
-    },
-  },
-  defaultVariants: {
-    variant: "default",
-  },
-});
-
 function TabsList({
   className,
   variant = "default",
   ...props
-}: React.ComponentProps<typeof TabsPrimitive.List> &
-  VariantProps<typeof tabsListVariants>) {
+}: React.ComponentProps<typeof TabsPrimitive.List> & {
+  variant?: "default" | "line" | null;
+}) {
   return (
     <TabsPrimitive.List
       data-slot="tabs-list"
       data-variant={variant}
-      className={cn(tabsListVariants({ variant }), className)}
+      className={className}
       {...props}
     />
   );
@@ -58,7 +44,7 @@ function TabsTrigger({
   return (
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
-      className={cn("", "", "", "", className)}
+      className={className}
       {...props}
     />
   );
@@ -71,10 +57,10 @@ function TabsContent({
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
-      className={cn("flex-1 outline-none", className)}
+      className={className}
       {...props}
     />
   );
 }
 
-export { Tabs, TabsContent, TabsList, tabsListVariants, TabsTrigger };
+export { Tabs, TabsContent, TabsList, TabsTrigger };

@@ -136,8 +136,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
             <div className="section-kicker">CAPTURED REPORT</div>
             <Dialog.Title>{selected?.model}</Dialog.Title>
             <Dialog.Description>
-              Recorded prompts, settings and timing boundaries. Imported
-              evidence is user supplied.
+              Recorded settings, prompts, responses and timing boundaries.
             </Dialog.Description>
             {selected && <ReportDetail report={selected} />}
           </Dialog.Content>

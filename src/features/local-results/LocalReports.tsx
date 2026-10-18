@@ -1,49 +1,33 @@
 "use client";
-import { ChevronRight, Monitor, Play, ShieldCheck } from "lucide-react";
+import { ChevronRight, Monitor, Play } from "lucide-react";
 import { useState } from "react";
 import type { Report } from "../../benchmark/schemas/report";
+import { SiteLink } from "../../components/SiteLink";
+import { ProviderLogo } from "../../components/ProviderLogo";
+import live from "../../benchmark/runtime/catalog";
 import { Button } from "../../components/ui/button";
 import { Select } from "../../components/ui/select";
 
 import { Status } from "../../components/Status";
-export function LocalReports({
-  reports,
-  onSelect,
-  onRun,
-}: {
-  reports: Report[];
-  onSelect: (r: Report) => void;
-  onRun: () => void;
-}) {
+export function LocalReports({ reports }: { reports: Report[] }) {
   const [filter, setFilter] = useState("all");
   const filtered = reports.filter(
     (r) => filter === "all" || r.status === filter,
   );
   return (
     <>
-      <div className="dataset-notice local">
-        <ShieldCheck size={16} />
-        <span>
-          <strong>Saved benchmark evidence.</strong> Published reports load from
-          the repository automatically. Local and imported reports stay on your
-          device. No metrics are pooled across devices or workloads.
-        </span>
-      </div>
       {!reports.length ? (
         <div className="empty local-empty">
           <div className="empty-icon">
             <Monitor size={30} />
           </div>
-          <span className="section-kicker">A CLEAN SLATE</span>
-          <h2>Your first measurement starts here.</h2>
-          <p>
-            Choose a pinned WebLLM model to run in this browser,
-            <br />
-            or import a compatible JSON report from another device.
-          </p>
-          <Button onClick={onRun}>
-            <Play size={15} />
-            Run your first benchmark
+          <h2>No local reports yet</h2>
+          <p>Run a benchmark on this device or import a saved JSON report.</p>
+          <Button asChild>
+            <SiteLink href="/run/">
+              <Play size={15} />
+              Run benchmark
+            </SiteLink>
           </Button>
         </div>
       ) : (
@@ -51,7 +35,7 @@ export function LocalReports({
           <div className="section-title">
             <div>
               <span className="section-number">01 /</span>
-              <h2>Your measurement log</h2>
+              <h2>Saved reports</h2>
             </div>
             <label>
               Status{" "}
@@ -80,11 +64,11 @@ export function LocalReports({
             <table>
               <thead>
                 <tr>
-                  <th>Run / device</th>
+                  <th>Model / device</th>
                   <th>Workload</th>
-                  <th>Engine ready</th>
-                  <th>First output¹</th>
-                  <th>Decode¹</th>
+                  <th>Model load</th>
+                  <th>First-output latency¹</th>
+                  <th>Generation speed¹</th>
                   <th>Status</th>
                   <th />
                 </tr>
@@ -92,21 +76,27 @@ export function LocalReports({
               <tbody>
                 {filtered.map((r) => {
                   const s = r.samples.find((s) => !s.warmup);
+                  const model = live.models.find((m) => m.id === r.model);
                   return (
                     <tr key={r.id}>
                       <td>
-                        <button
+                        <SiteLink
                           className="model-link"
-                          onClick={() => onSelect(r)}
+                          href={`/local-report/${r.id}`}
                         >
+                          <ProviderLogo
+                            family={model?.family ?? "Model"}
+                            model={model?.name}
+                          />
                           <span>
-                            <strong>{r.environment.deviceLabel}</strong>
+                            <strong>{model?.name ?? r.model}</strong>
+                            <small>{r.environment.deviceLabel}</small>
                             <small>
                               {new Date(r.createdAt).toLocaleString()} ·{" "}
                               {r.id.slice(0, 8)}
                             </small>
                           </span>
-                        </button>
+                        </SiteLink>
                       </td>
                       <td>{r.workload}</td>
                       <td>
@@ -122,13 +112,14 @@ export function LocalReports({
                         <Status value={r.status} />
                       </td>
                       <td>
-                        <button
-                          className="icon-button"
-                          aria-label={`Inspect run ${r.id.slice(0, 8)}`}
-                          onClick={() => onSelect(r)}
-                        >
-                          <ChevronRight size={16} />
-                        </button>
+                        <Button variant="ghost" size="icon" asChild>
+                          <SiteLink
+                            href={`/local-report/${r.id}`}
+                            aria-label={`View ${model?.name ?? "model"} report ${r.id.slice(0, 8)}`}
+                          >
+                            <ChevronRight size={16} />
+                          </SiteLink>
+                        </Button>
                       </td>
                     </tr>
                   );

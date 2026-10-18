@@ -1,6 +1,6 @@
 import { BrandMark } from "../BrandMark";
 import { brand } from "../../lib/brand";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Github } from "lucide-react";
 import { SiteLink } from "../SiteLink";
 export function Footer() {
   return (
@@ -9,11 +9,18 @@ export function Footer() {
         <BrandMark size={24} />
         <span>{brand.name}</span>
       </SiteLink>
-      <span>Performance. Compatibility. Reliability.</span>
-      <SiteLink className="text-link" href="/methodology/">
-        Methodology <ArrowUpRight size={13} />
-      </SiteLink>
-      <span className="mono">WEBGPU / v0.2</span>
+      <nav className="footer-links" aria-label="Footer navigation">
+        <SiteLink href="/methodology/">
+          Methodology <ArrowUpRight size={13} />
+        </SiteLink>
+        <a
+          href="https://github.com/gufranmirza/browser-llm-bench"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Github size={15} /> Source code
+        </a>
+      </nav>
     </footer>
   );
 }
