@@ -3,6 +3,7 @@
   "name": "browser-llm-bench",
   "compatibility_date": "2026-10-18",
   "workers_dev": true,
+  "routes": [{ "pattern": "browserllm.dev", "custom_domain": true }],
   "assets": {
     "directory": "./out",
     "html_handling": "force-trailing-slash",

@@ -30,7 +30,7 @@ Configure Workers Builds with:
 
 Wrangler is pinned in the lockfile. The explicit assets configuration prevents framework auto-configuration from adding OpenNext or changing the static build. For a local authenticated deployment, build first, then run `npm run deploy:cloudflare`. `npx wrangler deploy --dry-run` validates the package without publishing.
 
-Attach `browserllm.dev` to the Worker through Cloudflare’s domain settings. Verify HTTPS, direct model links, the runner, report JSON, sitemap and real 404 responses after deployment. Native collection stays in the local harness.
+`browserllm.dev` is declared as the Worker’s custom domain in `wrangler.jsonc`. The proxied DNS record is managed by Cloudflare. Verify HTTPS, direct model links, the runner, report JSON, sitemap and real 404 responses after deployment. Native collection stays in the local harness.
 
 ## Hosting behavior
 
