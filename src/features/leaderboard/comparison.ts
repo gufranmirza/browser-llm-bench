@@ -17,3 +17,15 @@ export function comparisonGroups(rows: readonly Row[]) {
         b.rows.length - a.rows.length,
     );
 }
+
+/** A saved report identifies its comparison without depending on group order. */
+export function selectComparison(
+  groups: ReturnType<typeof comparisonGroups>,
+  reportId: string,
+) {
+  return (
+    groups.find((group) =>
+      group.rows.some((row) => row.report?.id === reportId),
+    ) ?? groups[0]
+  );
+}

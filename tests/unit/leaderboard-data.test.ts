@@ -4,6 +4,10 @@ import test from "node:test";
 import live from "../../src/benchmark/runtime/catalog";
 import { parseReports } from "../../src/benchmark/schemas/report";
 import { fixtureRows } from "../fixtures/synthetic-rows";
+import {
+  comparisonGroups,
+  selectComparison,
+} from "../../src/features/leaderboard/comparison";
 
 import type { Report } from "../../src/benchmark/schemas/report";
 import {
@@ -78,6 +82,45 @@ test("reports from apparently identical devices are never silently pooled", () =
   assert.equal(selected.rows.length, 1);
   assert.equal(selected.rows[0].report?.id, "different-run");
   assert.equal(selected.cohorts.length, 2);
+});
+test("comparison selection preserves runtime boundaries and survives group reordering", () => {
+  const rows = [
+    reportRow(report),
+    reportRow({ ...report, id: "new-runtime", runtime: "WebLLM 0.2.86" }),
+    reportRow({
+      ...report,
+      id: "another-device",
+      environment: { ...report.environment, deviceLabel: "Another device" },
+    }),
+  ];
+  const groups = comparisonGroups(rows);
+  assert.equal(groups.length, 3);
+  for (const row of rows) {
+    const id = row.report!.id;
+    assert.deepEqual(selectComparison(groups, id)?.rows, [row]);
+    assert.deepEqual(selectComparison([...groups].reverse(), id)?.rows, [row]);
+  }
+  assert.equal(selectComparison(groups, "unknown"), groups[0]);
+  assert.equal(selectComparison([], "unknown"), undefined);
+});
+test("every published report is reachable through its comparison group", () => {
+  const directory = new URL("../../public/reports/", import.meta.url);
+  const manifest = JSON.parse(
+    readFileSync(new URL("manifest.json", directory), "utf8"),
+  );
+  const rows = manifest.reports.flatMap(({ file }: { file: string }) =>
+    parseReports(
+      JSON.parse(readFileSync(new URL(file, directory), "utf8")),
+    ).map(reportRow),
+  ) as ReturnType<typeof reportRow>[];
+  const groups = comparisonGroups(rows);
+  for (const row of rows) {
+    const selected = selectComparison(groups, row.report!.id)!;
+    assert.ok(selected.rows.includes(row));
+    assert.ok(
+      selected.rows.every((candidate) => candidate.runtime === row.runtime),
+    );
+  }
 });
 const fixtureFilters = {
   ...defaultFilters,

@@ -13,6 +13,7 @@ import {
   Timer,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   Bar,
   BarChart,
@@ -61,7 +62,7 @@ import {
 } from "./data";
 
 import { downloadJson } from "../../lib/download";
-import { comparisonGroups } from "./comparison";
+import { comparisonGroups, selectComparison } from "./comparison";
 
 type Entry = { row: Row; resources: ResourceSummary };
 type Key =
@@ -246,11 +247,18 @@ const faqs = [
 ];
 
 export default function LeaderboardPage({ allRows }: { allRows: Row[] }) {
+  const routeParams = useSearchParams();
   const [filters, setFilters] = useState<Filters>(() =>
-    measuredFilters(params()),
+    measuredFilters(new URLSearchParams(routeParams.toString())),
+  );
+  const [comparison, setComparison] = useState(
+    () => routeParams.get("comparison") ?? "",
   );
   useEffect(() => {
-    const sync = () => setFilters(measuredFilters(params()));
+    const sync = () => {
+      setFilters(measuredFilters(params()));
+      setComparison(params().get("comparison") ?? "");
+    };
     window.addEventListener("popstate", sync);
     const frame = requestAnimationFrame(() => {
       if (params().get("section") === "faq") {
@@ -273,7 +281,7 @@ export default function LeaderboardPage({ allRows }: { allRows: Row[] }) {
     [allRows],
   );
   const groups = useMemo(() => comparisonGroups(source), [source]);
-  const selected = groups[0];
+  const selected = selectComparison(groups, comparison);
   const entries = useMemo(
     () =>
       primaryMeasuredRows(filterRows(selected?.rows ?? [], filters)).map(
@@ -295,6 +303,8 @@ export default function LeaderboardPage({ allRows }: { allRows: Row[] }) {
       .filter(([k]) => k !== "untested" && k !== "cohort")
       .map(([k, v]) => [k, String(v)]),
   );
+  if (comparison && selected)
+    query.set("comparison", selected.rows[0].report!.id);
   if (params().get("section") === "faq") query.set("section", "faq");
   const back = `/?${query}`;
   const faqQuery = new URLSearchParams(query);
@@ -437,6 +447,30 @@ export default function LeaderboardPage({ allRows }: { allRows: Row[] }) {
             </p>
           </div>
         </div>
+        {groups.length > 1 && selected && (
+          <div className="lb-comparison-picker">
+            <Select
+              label="Comparison group"
+              value={selected.rows[0].report!.id}
+              onValueChange={(id) => {
+                setComparison(id);
+                setFilters({ ...defaultFilters });
+              }}
+              options={groups.map((group) => {
+                const count = primaryMeasuredRows(group.rows).length;
+                return {
+                  value: group.rows[0].report!.id,
+                  label: `${group.rows[0].runtime} · ${count} configuration${count === 1 ? "" : "s"}`,
+                  description: `${protocolLabel(group.rows[0])} · ${group.rows[0].browser} · ${group.rows[0].device}`,
+                };
+              })}
+            />
+            <p>
+              Each group shares a runtime, device and workload. Rankings stay
+              within that group.
+            </p>
+          </div>
+        )}
         <div className="lb-insights">
           {highlights.map(([k, label]) => {
             const ranked = eligible
