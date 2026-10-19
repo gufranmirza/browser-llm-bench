@@ -1,0 +1,29 @@
+{
+  "name": "WebLLM expansion · 8 models · 60 requests each",
+  "models": [
+    "SmolLM2-1.7B-Instruct-q4f16_1-MLC",
+    "gemma-2-2b-it-q4f16_1-MLC",
+    "Qwen3.5-0.8B-q4f16_1-MLC",
+    "Qwen3.5-2B-q4f16_1-MLC",
+    "Phi-4-mini-instruct-q4f16_1-MLC",
+    "Ministral-3-3B-Instruct-2512-BF16-q4f16_1-MLC",
+    "Qwen3.5-4B-q4f16_1-MLC",
+    "gemma-4-E2B-it-q4f16_1-MLC"
+  ],
+  "workload": "repeat",
+  "mode": "session-count",
+  "deviceLabel": "M5 Pro · 48 GB · dedicated Chrome",
+  "profiling": true,
+  "requirePower": true,
+  "settings": {
+    "temperature": 0,
+    "topP": 1,
+    "seed": 42,
+    "maxTokens": 64,
+    "contextWindow": 4096,
+    "warmups": 1,
+    "warmupTokens": 16,
+    "requestLimitMs": 60000,
+    "thinking": false
+  }
+}

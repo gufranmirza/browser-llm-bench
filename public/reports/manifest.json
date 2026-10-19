@@ -66,6 +66,48 @@
       "model": "Mistral-7B-Instruct-v0.2-q4f16_1-MLC",
       "file": "c6aca4eb-dd1c-4137-adef-d1582c39124e.json",
       "createdAt": "2026-10-18T08:18:33.797Z"
+    },
+    {
+      "id": "207abb67-c71c-41b9-9850-2c951cbf77a9",
+      "model": "SmolLM2-1.7B-Instruct-q4f16_1-MLC",
+      "file": "207abb67-c71c-41b9-9850-2c951cbf77a9.json",
+      "createdAt": "2026-10-19T16:35:50.091Z"
+    },
+    {
+      "id": "a23e0514-47d3-4804-9eca-725b55f8dcbc",
+      "model": "gemma-2-2b-it-q4f16_1-MLC",
+      "file": "a23e0514-47d3-4804-9eca-725b55f8dcbc.json",
+      "createdAt": "2026-10-19T16:43:08.719Z"
+    },
+    {
+      "id": "7e43e330-93c9-45ff-a2d0-19662fc8a233",
+      "model": "Qwen3.5-0.8B-q4f16_1-MLC",
+      "file": "7e43e330-93c9-45ff-a2d0-19662fc8a233.json",
+      "createdAt": "2026-10-19T16:51:58.232Z"
+    },
+    {
+      "id": "f858f1fe-e750-4df7-a5f2-8c70183887f7",
+      "model": "Qwen3.5-2B-q4f16_1-MLC",
+      "file": "f858f1fe-e750-4df7-a5f2-8c70183887f7.json",
+      "createdAt": "2026-10-19T16:57:28.755Z"
+    },
+    {
+      "id": "d5ce1016-d8bf-4277-bb5a-97098c0ad798",
+      "model": "Phi-4-mini-instruct-q4f16_1-MLC",
+      "file": "d5ce1016-d8bf-4277-bb5a-97098c0ad798.json",
+      "createdAt": "2026-10-19T17:13:38.778Z"
+    },
+    {
+      "id": "7b1a1193-f217-45b0-ba2d-a2d5b4db1678",
+      "model": "Ministral-3-3B-Instruct-2512-BF16-q4f16_1-MLC",
+      "file": "7b1a1193-f217-45b0-ba2d-a2d5b4db1678.json",
+      "createdAt": "2026-10-19T17:24:34.861Z"
+    },
+    {
+      "id": "e29a7461-7b99-42de-8a6e-945c5ea0ee41",
+      "model": "Qwen3.5-4B-q4f16_1-MLC",
+      "file": "e29a7461-7b99-42de-8a6e-945c5ea0ee41.json",
+      "createdAt": "2026-10-19T17:41:17.502Z"
     }
   ]
 }
