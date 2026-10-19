@@ -27,6 +27,21 @@ npm run harness -- --port 4173 --out out --preset harness/presets/comparison.jso
 npm run harness:launch -- --url http://127.0.0.1:4173/__harness/ --chrome '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 ```
 
+If the console is refreshed, use **Resume remaining models**. Completed reports
+in the current job are skipped; failed or incomplete models remain eligible to
+retry. Refreshing during an active model interrupts that model, so only refresh
+when the console is idle.
+
+After a controller restart, restore the same job explicitly:
+
+```sh
+npm run harness -- --preset harness/presets/webllm-expansion.json --resume-job artifacts/runs/JOB
+```
+
+Use the original preset and capture session. The controller validates the saved
+report identities before restoring completion state. The expansion preset adds
+eight pinned 4-bit WebLLM artifacts using the same 3 × 20 request schedule.
+
 ## Capture lifecycle
 
 Power capture and its native collector share a one-hour maximum. Each invocation creates a new capture directory and STOP marker scope; it refuses to overwrite prior evidence or overlap an active capture. The queue waits for fresh power and enough remaining capture time for the next session's full safety bound. Restart capture between sessions when the prior capture expires; rerun `harness:capture` after stopping it.

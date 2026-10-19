@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { reportSchema } from "../../src/benchmark/schemas/report";
 import { loadPreset } from "./config";
+import type { SavedRun } from "./queue";
 const exec = promisify(execFile);
 const types: Record<string, string> = {
   ".html": "text/html; charset=utf-8",
@@ -44,6 +45,7 @@ export async function startServer({
   presetFile = "harness/presets/comparison.json",
   sessionFile = "artifacts/current-session.json",
   basePath = "",
+  resumeJob = "",
 } = {}) {
   const root = process.cwd(),
     output = await realpath(resolve(root, out)),
@@ -67,13 +69,39 @@ export async function startServer({
       },
     });
   }
-  const jobDir = resolve(
-    artifacts,
-    "runs",
-    new Date().toISOString().replace(/[:.]/g, "-"),
-  );
+  const jobDir = resumeJob
+    ? await realpath(resolve(root, resumeJob))
+    : resolve(
+        artifacts,
+        "runs",
+        new Date().toISOString().replace(/[:.]/g, "-"),
+      );
+  if (resumeJob && (siteOnly || !isWithin(resolve(artifacts, "runs"), jobDir)))
+    throw Error(
+      "Resume job must be inside artifacts/runs and requires the harness",
+    );
   if (!siteOnly) await mkdir(jobDir, { recursive: true });
-  const saved: { id: string; model: string; file: string }[] = [];
+  const saved: SavedRun[] = [];
+  if (resumeJob) {
+    const entries = JSON.parse(
+      await readFile(resolve(jobDir, "queue-results.json"), "utf8"),
+    );
+    for (const entry of entries) {
+      const file = await realpath(resolve(root, entry.file));
+      if (!isWithin(jobDir, file))
+        throw Error("Saved report is outside the resumed job");
+      const report = reportSchema.parse(
+        JSON.parse(await readFile(file, "utf8")),
+      );
+      if (
+        report.id !== entry.id ||
+        report.model !== entry.model ||
+        !preset!.models.includes(report.model)
+      )
+        throw Error("Saved report does not match the resumed queue");
+      saved.push({ ...entry, status: report.status });
+    }
+  }
   let origin = "";
   async function session() {
     const data = JSON.parse(await readFile(resolve(root, sessionFile), "utf8"));
@@ -209,6 +237,7 @@ export async function startServer({
             model: report.model,
             file: relative(root, file),
             finalized,
+            status: report.status,
           };
           saved.push(result);
           await writeFile(
@@ -276,6 +305,7 @@ if (
     presetFile: option("--preset", "harness/presets/comparison.json"),
     sessionFile: option("--session", "artifacts/current-session.json"),
     basePath: option("--base-path", ""),
+    resumeJob: option("--resume-job", ""),
   }).catch((e) => {
     console.error(e);
     process.exitCode = 1;

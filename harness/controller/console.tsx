@@ -9,10 +9,11 @@ import { detectBrowserCapabilities } from "../../src/features/capabilities/detec
 import { useBenchmark } from "../../src/features/runner/useBenchmark";
 import "../../src/styles/base.css";
 import type { Preset } from "./config";
+import { completedModels, type SavedRun } from "./queue";
 import "./console.css";
 type Status = {
   preset: Preset;
-  saved: { id: string; model: string; file: string }[];
+  saved: SavedRun[];
   fresh: boolean;
   remainingMs: number;
   jobDir: string;
@@ -26,6 +27,7 @@ function Console() {
     [saving, setSaving] = useState(false);
   const busy = useRef(false),
     persisted = useRef(new Set<string>());
+  const completed = completedModels(status?.saved ?? []);
   const bench = useBenchmark((report) => {
     if (persisted.current.has(report.id)) return;
     persisted.current.add(report.id);
@@ -41,6 +43,20 @@ function Console() {
       });
       const result = await response.json();
       if (!response.ok) throw Error(result.error);
+      setStatus((current) =>
+        current
+          ? {
+              ...current,
+              saved: [
+                ...current.saved.filter((run) => run.id !== report.id),
+                {
+                  ...result,
+                  status: report.status,
+                },
+              ],
+            }
+          : current,
+      );
       setMessage(
         `Saved ${report.model}: ${report.status}. Repository publishing is a separate command.`,
       );
@@ -72,6 +88,10 @@ function Console() {
         "Queue complete. Captures and reports are saved locally; review audits before publishing.",
       );
       setRunning(false);
+      return;
+    }
+    if (completedModels(status.saved).has(status.preset.models[index])) {
+      setIndex((i) => i + 1);
       return;
     }
     if (
@@ -113,7 +133,11 @@ function Console() {
         This console exists only on the loopback harness server. Runs save to
         artifacts; publishing requires a separate command.
       </p>
-      <p role="status">{message}</p>
+      <p role="status">
+        {!running && !saving && status && message === "Checking local harness…"
+          ? `${completed.size} / ${status.preset.models.length} models completed and saved. ${completed.size < status.preset.models.length ? "Resume to run only unfinished models." : "Queue complete."}`
+          : message}
+      </p>
       <div className="panel">
         <strong>
           {bench.phase} · {bench.completed} measured requests
@@ -125,13 +149,18 @@ function Console() {
             : "Ready"}
         </p>
         <button
-          disabled={running || saving || !status}
+          disabled={
+            running ||
+            saving ||
+            !status ||
+            completed.size === status.preset.models.length
+          }
           onClick={() => {
             setIndex(0);
             setRunning(true);
           }}
         >
-          Start queue
+          {completed.size ? "Resume remaining models" : "Start queue"}
         </button>{" "}
         <button
           disabled={!running}
@@ -145,12 +174,12 @@ function Console() {
         <pre>{bench.output}</pre>
       </div>
       <ol>
-        {status?.preset.models.map((id, i) => (
+        {status?.preset.models.map((id) => (
           <li key={id}>
             <strong>
               {runnableModels.find((m) => m.id === id)?.name ?? id}
             </strong>{" "}
-            · {id} {i < index ? "✓ saved" : ""}
+            · {id} {completed.has(id) ? "✓ saved" : ""}
           </li>
         ))}
       </ol>
