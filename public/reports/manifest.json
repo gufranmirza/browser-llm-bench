@@ -108,6 +108,12 @@
       "model": "Qwen3.5-4B-q4f16_1-MLC",
       "file": "e29a7461-7b99-42de-8a6e-945c5ea0ee41.json",
       "createdAt": "2026-10-19T17:41:17.502Z"
+    },
+    {
+      "id": "1ea601f4-9d4b-4f8c-b9f2-d787d6f264ec",
+      "model": "gemma-4-E2B-it-q4f16_1-MLC",
+      "file": "1ea601f4-9d4b-4f8c-b9f2-d787d6f264ec.json",
+      "createdAt": "2026-10-19T18:09:19.242Z"
     }
   ]
 }

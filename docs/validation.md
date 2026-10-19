@@ -35,12 +35,11 @@ The full ten-model, 60-request benchmark suite was not repeated during migration
 
 Raw validation reports, screenshots and telemetry are retained locally under ignored `artifacts/validation`, `artifacts/runs` and `artifacts/captures`.
 
-
 # WebLLM expansion — October 19, 2026
 
-Seven completed 4-bit configurations are added to the curated reports. Gemma 4 E2B remains pending and is not included in this publication. The original eleven reports are preserved, for eighteen published configurations.
+Eight completed 4-bit configurations are added to the curated reports, including the final Gemma 4 E2B session. The original eleven reports are preserved, for nineteen published configurations.
 
-All seven ran sequentially in dedicated Chrome on an Apple M5 Pro with 48 GB RAM. Each session loaded once, warmed up once, and completed three windows of twenty requests with no added delay within windows and two full 90-second loaded-idle gaps. The preset is `harness/presets/webllm-expansion.json`. Every session confirmed model unload.
+All eight ran sequentially in dedicated Chrome on an Apple M5 Pro with 48 GB RAM. Each session loaded once, warmed up once, and completed three windows of twenty requests with no added delay within windows and two full 90-second loaded-idle gaps. The preset is `harness/presets/webllm-expansion.json`. Every session confirmed model unload.
 
 | Artifact | Valid requests | Observed power coverage | Requests overlapping a hidden page | Missing CPU intervals |
 | --- | ---: | ---: | ---: | ---: |
@@ -51,16 +50,19 @@ All seven ran sequentially in dedicated Chrome on an Apple M5 Pro with 48 GB RAM
 | `Phi-4-mini-instruct-q4f16_1-MLC` | 60 / 60 | 99.91% | 40 | 2 / 589 |
 | `Ministral-3-3B-Instruct-2512-BF16-q4f16_1-MLC` | 60 / 60 | 99.93% | 60 | 6 / 609 |
 | `Qwen3.5-4B-q4f16_1-MLC` | 60 / 60 | 99.92% | 60 | 11 / 664 |
+| `gemma-4-E2B-it-q4f16_1-MLC` | 60 / 60 | 99.93% | 25 | 5 / 692 |
 
 ## Data checks and limits
 
-- All 420 measured responses have token counts, first-output latency, response duration, generation speed, and ordered start/end timestamps. Warmup is excluded.
+- All 480 measured responses have token counts, first-output latency, response duration, generation speed, and ordered start/end timestamps. Warmup is excluded.
 - Each run passed the shared report schema and protocol audit: three valid 20-request windows, both idle gaps, and confirmed unload.
 - Native memory and host power cover the full session. Maximum observed spacing is 1.009 seconds for native samples and 1.051 seconds for power samples. Observed power coverage exceeds 99.90% for every run; the small remainder is not filled with estimates.
-- All 42 referenced raw-evidence files match their recorded SHA-256 hashes and byte lengths. Raw telemetry and browser profiles stay in ignored local artifacts; compact reports retain the measurements, diagnostics, and evidence provenance.
+- All 48 referenced raw-evidence files match their recorded SHA-256 hashes and byte lengths. Raw telemetry and browser profiles stay in ignored local artifacts; compact reports retain the measurements, diagnostics, and evidence provenance.
 - Some CPU intervals cannot be calculated when Chrome helper processes start or disappear. These are retained as null with incomplete-process accounting, rather than treated as zero. Memory remains present during those intervals.
 - Each run has two unavailable Chrome GPU-counter intervals, during loading and after unload when the driver queue set changes. There are no missing GPU-counter intervals during inference.
 - Hidden-page periods remain in lifecycle events. These runs are not exclusively foreground measurements; browser scheduling and other host activity can affect comparisons. Host power is whole-machine subsystem power, not model-only power.
 - Worker JS heap and physical GPU residency remain unavailable where browser APIs do not expose them. WASM memory and tracked GPU buffers are allocation measurements, not substitutes for those values.
 
-Publication adds the seven compact JSON files and their manifest entries. It does not overwrite earlier artifacts, include private browser runs, or claim that unavailable signals were measured.
+Publication adds the eight compact JSON files and their manifest entries. It does not overwrite earlier artifacts, include private browser runs, or claim that unavailable signals were measured.
+
+Final publication checks passed: 62 TypeScript unit tests, 21 Python harness tests, two integration tests, type checking, formatting, unused-code checks, production build, and the 28-page static export audit. The export includes all nineteen reports and verifies report links, SEO metadata, social images, and harness isolation.
